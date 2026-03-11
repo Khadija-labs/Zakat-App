@@ -13,3 +13,13 @@ export const contactSubmitSchema = contactFormSchema.extend({
   recaptchaToken: z.string().min(1, "Please complete the reCAPTCHA").optional(),
 });
 export type ContactSubmit = z.infer<typeof contactSubmitSchema>;
+
+/** Chat message for ZakatGPT */
+export const chatMessageSchema = z.object({
+  role: z.enum(["user", "assistant", "system"]),
+  content: z.string(),
+});
+export const chatRequestSchema = z.object({
+  messages: z.array(chatMessageSchema).min(1).max(50),
+});
+export type ChatRequest = z.infer<typeof chatRequestSchema>;

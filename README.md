@@ -13,6 +13,7 @@ A professional web app to calculate Islamic Zakat for Muslims. Supports cash, sa
 - ✉️ **Contact form** – Send messages directly to your inbox; optional reCAPTCHA v2 for spam protection  
 - 📱 **Responsive design** – Works perfectly on mobile, tablet, and desktop  
 - 📝 **Extra pages** – About Us, Terms & Conditions, Privacy Policy  
+- 🤖 **ZakatGPT** – In-site chatbot to ask Zakat questions and get Zakat calculated from natural language (e.g. “I have 100k cash and 50k savings, what’s my Zakat?”)  
 
 ---
 
@@ -71,6 +72,7 @@ The app is set up to run on Vercel as a serverless function. All routes (API and
    - `SMTP_USER`, `SMTP_PASS` – For the contact form (e.g. Gmail App Password).
    - `MAIL_TO` (optional) – Recipient for contact form messages.
    - `RECAPTCHA_SECRET_KEY` (optional) – If you use reCAPTCHA on the contact form.
+   - `OPENAI_API_KEY` (optional) – For ZakatGPT chatbot. Get a key at [OpenAI API keys](https://platform.openai.com/api-keys). If unset, the chat shows a friendly “not configured” message.
 
 4. **Deploy** – Push to your connected branch; Vercel will build and deploy.
 
