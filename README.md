@@ -48,7 +48,7 @@ A professional web app to calculate Islamic Zakat for Muslims. Supports cash, sa
 
 Below is the link to the live website (to be added later):  
 
-[🔗 Visit ZakatCalc](#)  
+[🔗 Visit https://zakat-app-wine.vercel.app/  
 
 ---
 
