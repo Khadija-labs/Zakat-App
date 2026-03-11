@@ -28,9 +28,12 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
 
   try {
     if (!appPromise) {
-      appPromise = import("../server/app").then((m) => m.createApp());
+      // vercel-app.js is generated at build time (script/build.ts); no .ts source for types
+      // @ts-expect-error - generated ESM bundle has createApp export
+      const mod = await import("./vercel-app.js");
+      appPromise = mod.createApp();
     }
-    const { app } = await appPromise;
+    const { app } = await appPromise!;
     await new Promise<void>((resolve, reject) => {
       res.once("finish", resolve);
       res.once("close", resolve);

@@ -59,6 +59,26 @@ async function buildAll() {
     external: externals,
     logLevel: "info",
   });
+
+  // Bundle server/app for Vercel serverless (api/ can only load from api/ or node_modules)
+  console.log("building Vercel serverless app bundle...");
+  await esbuild({
+    entryPoints: ["server/app.ts"],
+    platform: "node",
+    bundle: true,
+    format: "esm",
+    outfile: "api/vercel-app.js",
+    define: {
+      "process.env.NODE_ENV": '"production"',
+    },
+    minify: true,
+    external: externals,
+    logLevel: "info",
+    alias: {
+      "@shared/routes": "./shared/routes.ts",
+      "@shared/schema": "./shared/schema.ts",
+    },
+  });
 }
 
 buildAll().catch((err) => {
