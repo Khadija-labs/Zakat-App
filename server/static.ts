@@ -8,6 +8,11 @@ export function serveStatic(app: Express) {
     ? path.join(process.cwd(), "dist", "public")
     : path.resolve(__dirname, "public");
   if (!fs.existsSync(distPath)) {
+    if (process.env.VERCEL) {
+      // On Vercel, dist/public may not be in the function bundle; don't crash so /api/* still works.
+      console.warn("[static] Build directory not found on Vercel:", distPath);
+      return;
+    }
     throw new Error(
       `Could not find the build directory: ${distPath}, make sure to build the client first`,
     );

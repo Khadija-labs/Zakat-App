@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, Send, X, Loader2 } from "lucide-react";
+import { MessageCircle, Send, X, Loader2, MessageSquarePlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -78,6 +78,12 @@ export function ZakatGPT() {
     }
   }
 
+  function startNewChat() {
+    setMessages([{ role: "assistant", content: WELCOME }]);
+    setError(null);
+    setInput("");
+  }
+
   return (
     <>
       <AnimatePresence>
@@ -96,14 +102,26 @@ export function ZakatGPT() {
                 </div>
                 <span className="font-display font-bold text-lg">ZakatGPT</span>
               </div>
-              <button
-                type="button"
-                onClick={() => setOpen(false)}
-                className="p-1.5 rounded-lg hover:bg-white/10 transition-colors"
-                aria-label="Close chat"
-              >
-                <X className="w-5 h-5" />
-              </button>
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={startNewChat}
+                  disabled={loading}
+                  className="p-1.5 rounded-lg hover:bg-white/10 transition-colors"
+                  aria-label="Start new chat"
+                  title="Start new chat"
+                >
+                  <MessageSquarePlus className="w-5 h-5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setOpen(false)}
+                  className="p-1.5 rounded-lg hover:bg-white/10 transition-colors"
+                  aria-label="Close chat"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
             </div>
             <div
               ref={listRef}
