@@ -104,13 +104,17 @@ export async function registerRoutes(
   const CHAT_PATH = "/api/chat";
 
   app.post(CHAT_PATH, async (req, res) => {
+    const sendError = (status: number, message: string) => {
+      if (!res.headersSent) res.status(status).json({ error: message });
+    };
     try {
+      if (!req.body || typeof req.body !== "object") {
+        return sendError(400, "Request body is required (JSON with messages array).");
+      }
       const body = chatRequestSchema.parse(req.body);
       const openaiKey = process.env.OPENAI_API_KEY;
       if (!openaiKey) {
-        return res.status(503).json({
-          error: "ZakatGPT is not configured. Please set OPENAI_API_KEY on the server.",
-        });
+        return sendError(503, "ZakatGPT is not configured. Please set OPENAI_API_KEY in Vercel project settings.");
       }
       const openai = new OpenAI({ apiKey: openaiKey });
       const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
@@ -125,7 +129,7 @@ export async function registerRoutes(
       });
       const choice = response.choices[0];
       if (!choice?.message) {
-        return res.status(502).json({ error: "No response from assistant." });
+        return sendError(502, "No response from assistant.");
       }
       let assistantMessage = choice.message;
       if (assistantMessage.tool_calls && assistantMessage.tool_calls.length > 0) {
@@ -159,23 +163,36 @@ export async function registerRoutes(
           if (nextChoice?.message?.content) assistantMessage = nextChoice.message;
         }
       }
-      res.status(200).json({
-        message: {
-          role: "assistant" as const,
-          content: assistantMessage.content || "I couldn't generate a response. Please try again.",
-        },
-      });
+      if (!res.headersSent) {
+        res.status(200).json({
+          message: {
+            role: "assistant" as const,
+            content: assistantMessage.content || "I couldn't generate a response. Please try again.",
+          },
+        });
+      }
     } catch (err) {
+      if (res.headersSent) return;
       if (err instanceof z.ZodError) {
         return res.status(400).json({
           error: "Invalid request",
           details: err.errors,
         });
       }
+      const errObj = err as { status?: number; code?: string; message?: string };
+      const status = errObj?.status;
+      let userMessage = "Something went wrong. Please try again.";
+      if (status === 401) {
+        userMessage = "Invalid OpenAI API key. Add or update OPENAI_API_KEY in Vercel → Project → Settings → Environment Variables.";
+      } else if (status === 429) {
+        userMessage = "Rate limit reached. Please wait a moment and try again.";
+      } else if (status === 500 || status === 502 || status === 503) {
+        userMessage = "OpenAI service is temporarily unavailable. Please try again in a moment.";
+      } else if (err instanceof Error && err.message) {
+        userMessage = err.message.length > 200 ? "A server error occurred. Please try again." : err.message;
+      }
       console.error("[chat] Error:", err);
-      res.status(500).json({
-        error: err instanceof Error ? err.message : "Something went wrong.",
-      });
+      res.status(500).json({ error: userMessage });
     }
   });
 
