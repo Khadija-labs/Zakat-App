@@ -2,10 +2,16 @@ import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
 import { BookOpen, CheckCircle2, Info, AlertCircle } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { SEO } from "@/components/SEO";
 
 export default function UnderstandingZakat() {
   return (
     <Layout>
+      <SEO
+        title="Understanding Zakat – Rules, Nisab & Guide"
+        description="A comprehensive guide to Zakat: rules, thresholds (Nisab), rates, and spiritual significance. Learn how to calculate and pay Zakat correctly."
+        path="/understanding-zakat"
+      />
       <div className="bg-secondary text-white py-16 lg:py-24">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <BookOpen className="w-12 h-12 text-primary mx-auto mb-6" />

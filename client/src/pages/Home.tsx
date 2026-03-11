@@ -1,10 +1,17 @@
 import { Layout } from "@/components/Layout";
 import { ZakatCalculator } from "@/components/Calculator";
+import { SEO } from "@/components/SEO";
+import { JsonLd } from "@/components/JsonLd";
 
 export default function Home() {
-
   return (
     <Layout>
+      <JsonLd />
+      <SEO
+        title="Free Zakat Calculator – Purify Your Wealth with Precision"
+        description="Calculate your Zakat accurately according to Islamic principles. Private, client-side calculator for cash, gold, silver, savings & more. No data leaves your device."
+        path="/"
+      />
       {/* Hero Section */}
       <section className="relative pt-24 pb-32 overflow-hidden">
         <div className="absolute inset-0 z-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary via-background to-background pointer-events-none" />
