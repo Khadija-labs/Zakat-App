@@ -2,11 +2,30 @@ import type { IncomingMessage, ServerResponse } from "http";
 
 let appPromise: Promise<{ app: (req: IncomingMessage, res: ServerResponse) => void }> | null = null;
 
+/** Handle GET /api/chat/status without loading Express (so it works even when createApp fails). */
+function handleChatStatus(res: ServerResponse): void {
+  res.statusCode = 200;
+  res.setHeader("Content-Type", "application/json");
+  res.end(
+    JSON.stringify({
+      ok: true,
+      openaiConfigured: !!process.env.OPENAI_API_KEY,
+    })
+  );
+}
+
 /**
  * Vercel serverless handler: forwards all requests to the Express app.
- * Uses dynamic import so load errors are caught; waits for response to finish before returning.
+ * GET /api/chat/status is handled here so it works even if the app fails to load.
  */
 export default async function handler(req: IncomingMessage, res: ServerResponse): Promise<void> {
+  const url = req.url || "";
+  const isGet = req.method === "GET";
+  if (isGet && (url === "/api/chat/status" || url.endsWith("/api/chat/status"))) {
+    handleChatStatus(res);
+    return;
+  }
+
   try {
     if (!appPromise) {
       appPromise = import("../server/app").then((m) => m.createApp());

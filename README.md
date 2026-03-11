@@ -76,6 +76,11 @@ The app is set up to run on Vercel as a serverless function. All routes (API and
 
 4. **Deploy** – Push to your connected branch; Vercel will build and deploy.
 
+### If ZakatGPT returns 500 on Vercel
+- **Check env:** Open `https://your-app.vercel.app/api/chat/status`. If it returns `{"ok":true,"openaiConfigured":false}`, add `OPENAI_API_KEY` in Vercel → Settings → Environment Variables and redeploy.
+- **See the real error:** In Chrome DevTools → Network → click the failed `api/chat` request → **Response** tab. The body is JSON with an `error` message (e.g. invalid API key, rate limit).
+- **Logs:** Vercel → Project → Logs. Filter by the serverless function to see `[chat] Error:` and the full server error.
+
 ### Local development
 
 - `npm run dev` – Runs the Express server with Vite dev server (no Vercel).
