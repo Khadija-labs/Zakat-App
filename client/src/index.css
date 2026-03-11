@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-sans: 'Lato', sans-serif;
+    --font-display: 'Playfair Display', serif;
+    --font-arabic: 'Amiri', serif;
+
+    /* Theme Colors: Cream, Mehroon, Gold, Brown */
+    --background: 40 33% 96%; /* Cream/Off-white */
+    --foreground: 350 43% 22%; /* Dark Mehroon */
+
+    --primary: 43 74% 49%; /* Elegant Gold */
+    --primary-foreground: 0 0% 100%; /* White */
+
+    --secondary: 350 43% 22%; /* Dark Mehroon */
+    --secondary-foreground: 40 33% 96%; /* Cream */
+
+    --muted: 40 20% 90%; 
+    --muted-foreground: 28 45% 40%; /* Brown */
+
+    --accent: 28 45% 26%; /* Dark Brown */
+    --accent-foreground: 40 33% 96%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 43 50% 80%; /* Light Gold Border */
+    --input: 40 20% 90%;
+    --ring: 43 74% 49%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 350 43% 22%;
+    
+    --radius: 0.75rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased selection:bg-primary/20 selection:text-secondary;
+    font-family: var(--font-sans);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+  }
+
+  .arabic-text {
+    font-family: var(--font-arabic);
+  }
+
+  /* Remove number input spinners and autocomplete dropdowns */
+  input[type="text"]::-webkit-outer-spin-button,
+  input[type="text"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type="text"] {
+    -moz-appearance: textfield;
+  }
+
+  /* Disable autocomplete dropdown styling */
+  input::-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px white inset;
+  }
+
+  input[type="text"]::placeholder {
+    color: hsl(var(--muted-foreground) / 0.5);
+  }
+}
+
+@layer utilities {
+  .islamic-pattern {
+    background-color: hsl(var(--background));
+    background-image: 
+      radial-gradient(hsl(var(--primary) / 0.15) 2px, transparent 2px),
+      radial-gradient(hsl(var(--primary) / 0.1) 1px, transparent 1px);
+    background-size: 32px 32px;
+    background-position: 0 0, 16px 16px;
+  }
+  
+  .text-gradient-gold {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-[#FDE08B] to-primary;
+  }
+
+  .bg-gradient-gold {
+    @apply bg-gradient-to-r from-[#D4AF37] to-[#AA8000];
+  }
+
+  .shadow-gold {
+    box-shadow: 0 10px 40px -10px hsl(var(--primary) / 0.25);
+  }
+}

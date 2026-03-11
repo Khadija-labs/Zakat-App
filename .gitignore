@@ -1,0 +1,30 @@
+node_modules
+dist
+.DS_Store
+server/public
+vite.config.ts.*
+*.tar.gz
+
+# Environment / secrets (never commit)
+.env
+.env.local
+.env.*.local
+
+# Cursor / Replit local state and skills (not needed on GitHub)
+.local
+
+# IDE / editor
+.idea
+.vscode
+*.swp
+*.swo
+*~
+
+# OS
+Thumbs.db
+Desktop.ini
+
+# Logs and debug
+*.log
+npm-debug.log*
+.
