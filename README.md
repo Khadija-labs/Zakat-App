@@ -29,6 +29,7 @@ The app is set up to run on Vercel as a serverless function. All routes (API and
 
 ## SEO
 
+
 The app is set up for search engines and social sharing:
 
 - **Default meta tags** in `client/index.html`: title, description, Open Graph, Twitter Card, canonical URL.
