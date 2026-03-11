@@ -5,7 +5,7 @@
       (function() {
         var k = 'zakatcalc-theme';
         var v = localStorage.getItem(k);
-        var isDark = v === 'dark' || (v !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        var isDark = v === 'dark';
         document.documentElement.classList.add(isDark ? 'dark' : 'light');
       })();
     </script>

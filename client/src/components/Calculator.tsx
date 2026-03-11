@@ -375,7 +375,7 @@ export function ZakatCalculator() {
 
               <div className="pt-4 text-center">
                 <p className="text-sm font-medium mb-2 opacity-80">Your Zakat Obligation</p>
-                <div className={`text-5xl font-display font-bold py-6 rounded-xl border ${calculation.isEligible ? 'bg-primary/20 border-primary text-primary shadow-[0_0_20px_rgba(212,175,55,0.3)]' : 'bg-white/5 border-white/10 text-white/50'}`}>
+                <div className={`text-5xl font-display font-bold py-6 rounded-xl border ${calculation.isEligible ? 'bg-primary/20 border-primary text-primary shadow-[0_0_24px_hsl(var(--primary)/0.35)]' : 'bg-white/5 border-white/10 text-white/50'}`}>
                   {currencyLabel} {calculation.zakatAmount.toLocaleString(undefined, { maximumFractionDigits: 2 })}
                 </div>
                 {!calculation.isEligible && calculation.netWealth > 0 && (
