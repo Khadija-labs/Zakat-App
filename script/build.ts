@@ -61,13 +61,14 @@ async function buildAll() {
   });
 
   // Bundle server/app for Vercel serverless (api/ can only load from api/ or node_modules)
+  // Use CJS so Node ESM can load it via createRequire (avoids ESM/CJS interop issues on Vercel)
   console.log("building Vercel serverless app bundle...");
   await esbuild({
     entryPoints: ["server/app.ts"],
     platform: "node",
     bundle: true,
-    format: "esm",
-    outfile: "api/vercel-app.js",
+    format: "cjs",
+    outfile: "api/vercel-app.cjs",
     define: {
       "process.env.NODE_ENV": '"production"',
     },

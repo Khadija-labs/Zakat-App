@@ -1,5 +1,7 @@
 import type { IncomingMessage, ServerResponse } from "http";
+import { createRequire } from "module";
 
+const require = createRequire(import.meta.url);
 let appPromise: Promise<{ app: (req: IncomingMessage, res: ServerResponse) => void }> | null = null;
 
 /** Handle GET /api/chat/status without loading Express (so it works even when createApp fails). */
@@ -28,10 +30,8 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
 
   try {
     if (!appPromise) {
-      // vercel-app.js is generated at build time (script/build.ts); no .ts source for types
-      // @ts-expect-error - generated ESM bundle has createApp export
-      const mod = await import("./vercel-app.js");
-      appPromise = mod.createApp();
+      const { createApp } = require("./vercel-app.cjs") as { createApp: () => Promise<{ app: (req: IncomingMessage, res: ServerResponse) => void }> };
+      appPromise = createApp();
     }
     const { app } = await appPromise!;
     await new Promise<void>((resolve, reject) => {
