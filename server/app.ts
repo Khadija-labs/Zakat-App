@@ -6,7 +6,13 @@ import { createServer, type Server } from "http";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+// When bundled as CJS (e.g. api/vercel-app.cjs), import.meta.url may be undefined; use process.cwd()
+let __dirname: string;
+try {
+  __dirname = path.dirname(fileURLToPath(import.meta.url));
+} catch {
+  __dirname = process.cwd();
+}
 
 // Load .env from project root
 const envPath = path.resolve(__dirname, "..", ".env");
