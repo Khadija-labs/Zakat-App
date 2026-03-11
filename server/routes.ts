@@ -103,6 +103,14 @@ export async function registerRoutes(
   // ZakatGPT chat: answers Zakat questions and can calculate Zakat via tool
   const CHAT_PATH = "/api/chat";
 
+  // Status check: verify chat API is up and OPENAI_API_KEY is set (no key value exposed)
+  app.get("/api/chat/status", (_req, res) => {
+    res.status(200).json({
+      ok: true,
+      openaiConfigured: !!process.env.OPENAI_API_KEY,
+    });
+  });
+
   app.post(CHAT_PATH, async (req, res) => {
     const sendError = (status: number, message: string) => {
       if (!res.headersSent) res.status(status).json({ error: message });
@@ -179,17 +187,18 @@ export async function registerRoutes(
           details: err.errors,
         });
       }
-      const errObj = err as { status?: number; code?: string; message?: string };
-      const status = errObj?.status;
+      const errObj = err as { status?: number; code?: string; message?: string; error?: { message?: string } };
+      const status = errObj?.status ?? (errObj?.error as { status?: number })?.status;
+      const rawMessage = err instanceof Error ? err.message : errObj?.message ?? errObj?.error?.message ?? String(err);
       let userMessage = "Something went wrong. Please try again.";
       if (status === 401) {
-        userMessage = "Invalid OpenAI API key. Add or update OPENAI_API_KEY in Vercel → Project → Settings → Environment Variables.";
+        userMessage = "Invalid OpenAI API key. Add or update OPENAI_API_KEY in Vercel → Settings → Environment Variables.";
       } else if (status === 429) {
         userMessage = "Rate limit reached. Please wait a moment and try again.";
       } else if (status === 500 || status === 502 || status === 503) {
         userMessage = "OpenAI service is temporarily unavailable. Please try again in a moment.";
-      } else if (err instanceof Error && err.message) {
-        userMessage = err.message.length > 200 ? "A server error occurred. Please try again." : err.message;
+      } else if (rawMessage && rawMessage.length > 0 && rawMessage.length <= 200) {
+        userMessage = rawMessage;
       }
       console.error("[chat] Error:", err);
       res.status(500).json({ error: userMessage });
