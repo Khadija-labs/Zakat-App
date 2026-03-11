@@ -1,4 +1,5 @@
 import { Layout } from "@/components/Layout";
+import { SEO } from "@/components/SEO";
 import { motion } from "framer-motion";
 import { Mail, Send } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -126,6 +127,11 @@ export default function Contact() {
 
   return (
     <Layout>
+      <SEO
+        title="Contact Us"
+        description="Have a question or feedback about ZakatCalc? Get in touch. We'd love to hear from you."
+        path="/contact"
+      />
       <div className="bg-secondary text-white py-16 lg:py-24">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <Mail className="w-12 h-12 text-primary mx-auto mb-6" />

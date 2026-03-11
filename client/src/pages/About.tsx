@@ -1,10 +1,16 @@
 import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
 import { Heart, Shield, Calculator, BookOpen, Users } from "lucide-react";
+import { SEO } from "@/components/SEO";
 
 export default function About() {
   return (
     <Layout>
+      <SEO
+        title="About ZakatCalc"
+        description="A trusted, privacy-first tool to help Muslims fulfill their Zakat obligation with clarity and confidence. Learn about our mission and values."
+        path="/about"
+      />
       <div className="bg-secondary text-white py-16 lg:py-24">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <Heart className="w-12 h-12 text-primary mx-auto mb-6" />

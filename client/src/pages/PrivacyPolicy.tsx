@@ -1,9 +1,15 @@
 import { Layout } from "@/components/Layout";
+import { SEO } from "@/components/SEO";
 import { ShieldCheck } from "lucide-react";
 
 export default function PrivacyPolicy() {
   return (
     <Layout>
+      <SEO
+        title="Privacy Policy"
+        description="How ZakatCalc handles your data. We do not store your financial inputs; calculations run entirely on your device."
+        path="/privacy-policy"
+      />
       <div className="bg-secondary text-white py-16">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <ShieldCheck className="w-12 h-12 text-primary mx-auto mb-6" />

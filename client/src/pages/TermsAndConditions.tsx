@@ -1,10 +1,16 @@
 import { Layout } from "@/components/Layout";
 import { Link } from "wouter";
 import { FileText } from "lucide-react";
+import { SEO } from "@/components/SEO";
 
 export default function TermsAndConditions() {
   return (
     <Layout>
+      <SEO
+        title="Terms & Conditions"
+        description="Terms of use for ZakatCalc. An informational calculator for Zakat estimation; verify with a qualified scholar."
+        path="/terms-and-conditions"
+      />
       <div className="bg-secondary text-white py-16">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <FileText className="w-12 h-12 text-primary mx-auto mb-6" />
