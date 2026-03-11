@@ -40,7 +40,20 @@ export function ZakatGPT() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: nextMessages }),
       });
-      const data = await res.json();
+      const contentType = res.headers.get("content-type") ?? "";
+      const raw = await res.text();
+      let data: { message?: { content?: string }; error?: string };
+      if (contentType.includes("application/json") && raw) {
+        try {
+          data = JSON.parse(raw);
+        } catch {
+          data = { error: res.ok ? "Invalid response from server." : raw.slice(0, 200) };
+        }
+      } else {
+        data = res.ok
+          ? { error: "Server did not return JSON." }
+          : { error: raw.slice(0, 200) || "Server error. Try again later." };
+      }
       if (!res.ok) {
         setError(data.error || "Something went wrong.");
         setMessages((prev) => prev.slice(0, -1));
