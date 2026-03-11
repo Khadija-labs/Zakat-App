@@ -107,7 +107,7 @@ export function ZakatGPT() {
                   type="button"
                   onClick={startNewChat}
                   disabled={loading}
-                  className="p-1.5 rounded-lg hover:bg-white/10 transition-colors"
+                  className="p-1.5 rounded-lg hover:bg-secondary-foreground/10 transition-colors"
                   aria-label="Start new chat"
                   title="Start new chat"
                 >
@@ -116,7 +116,7 @@ export function ZakatGPT() {
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
-                  className="p-1.5 rounded-lg hover:bg-white/10 transition-colors"
+                  className="p-1.5 rounded-lg hover:bg-secondary-foreground/10 transition-colors"
                   aria-label="Close chat"
                 >
                   <X className="w-5 h-5" />

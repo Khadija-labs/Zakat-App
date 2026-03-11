@@ -146,7 +146,7 @@ export default function Contact() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-2xl p-8 md:p-10 shadow-gold border border-border"
+          className="bg-card rounded-2xl p-8 md:p-10 shadow-gold border border-border"
         >
           <p className="text-muted-foreground text-sm mb-6">
             We do not store your message in a database. It is sent directly to our team so we can respond. Your data is not used for marketing or shared with third parties.

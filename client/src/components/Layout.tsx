@@ -1,12 +1,13 @@
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { Link, useLocation } from "wouter";
-import { Moon, HeartHandshake, FileText, Menu, X, Users, Mail, Scale } from "lucide-react";
-import { useState } from "react";
+import { Moon, Sun, HeartHandshake, FileText, Menu, X, Users, Mail, Scale } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTheme } from "@/context/ThemeContext";
 
 export function Layout({ children }: { children: ReactNode }) {
   const [location] = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { theme, toggleTheme } = useTheme();
 
   const navLinks = [
     { href: "/", label: "Calculator", icon: <HeartHandshake className="w-4 h-4" /> },
@@ -40,7 +41,7 @@ export function Layout({ children }: { children: ReactNode }) {
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center gap-8">
+            <nav className="hidden md:flex items-center gap-6">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
@@ -53,15 +54,32 @@ export function Layout({ children }: { children: ReactNode }) {
                   {link.label}
                 </Link>
               ))}
+              <button
+                type="button"
+                onClick={toggleTheme}
+                className="p-2.5 rounded-xl bg-muted hover:bg-muted/80 text-foreground transition-colors"
+                aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+              >
+                {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+              </button>
             </nav>
 
-            {/* Mobile Menu Toggle */}
-            <button
-              className="md:hidden p-2 text-foreground"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            >
-              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={toggleTheme}
+                className="md:hidden p-2.5 rounded-xl bg-muted hover:bg-muted/80 text-foreground transition-colors"
+                aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+              >
+                {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+              </button>
+              <button
+                className="md:hidden p-2 text-foreground hover:bg-muted rounded-lg transition-colors"
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              >
+                {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </button>
+            </div>
           </div>
         </div>
       </header>
@@ -84,7 +102,7 @@ export function Layout({ children }: { children: ReactNode }) {
                   className={`flex items-center gap-3 p-3 rounded-lg ${
                     location === link.href
                       ? "bg-primary/10 text-primary font-bold"
-                      : "text-foreground hover:bg-black/5"
+                      : "text-foreground hover:bg-muted"
                   }`}
                 >
                   {link.icon}

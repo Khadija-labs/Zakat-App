@@ -83,7 +83,7 @@ export default {
         },
       },
       fontFamily: {
-        sans: ["Lato", "sans-serif"],
+        sans: ["Plus Jakarta Sans", "Lato", "sans-serif"],
         serif: ["var(--font-serif)"],
         mono: ["var(--font-mono)"],
         display: ["Playfair Display", "serif"],

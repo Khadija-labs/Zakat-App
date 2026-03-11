@@ -25,7 +25,7 @@ export default function About() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-2xl p-8 md:p-10 shadow-gold border border-border mb-10"
+          className="bg-card rounded-2xl p-8 md:p-10 shadow-gold border border-border mb-10"
         >
           <h2 className="font-display text-2xl font-bold text-secondary mb-6 flex items-center gap-3">
             <BookOpen className="text-primary w-7 h-7" /> Our Mission
@@ -43,7 +43,7 @@ export default function About() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-amber-50 rounded-2xl p-8 border border-amber-200"
+            className="bg-amber-50 dark:bg-amber-950/40 rounded-2xl p-8 border border-amber-200 dark:border-amber-800/60"
           >
             <Calculator className="w-10 h-10 text-primary mb-4" />
             <h3 className="font-display text-xl font-bold text-secondary mb-3">Precision & Clarity</h3>
@@ -55,7 +55,7 @@ export default function About() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
-            className="bg-slate-50 rounded-2xl p-8 border border-slate-200"
+            className="bg-slate-50 dark:bg-slate-900/40 rounded-2xl p-8 border border-slate-200 dark:border-slate-700/60"
           >
             <Shield className="w-10 h-10 text-primary mb-4" />
             <h3 className="font-display text-xl font-bold text-secondary mb-3">Privacy by Design</h3>

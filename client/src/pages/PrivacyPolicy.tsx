@@ -19,7 +19,7 @@ export default function PrivacyPolicy() {
       </div>
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="bg-white rounded-3xl p-8 md:p-12 shadow-sm border border-border">
+        <div className="bg-card rounded-3xl p-8 md:p-12 shadow-sm border border-border">
           <div className="prose prose-lg max-w-none text-foreground/80">
             <h2 className="font-display text-2xl font-bold text-secondary mb-4">1. Complete Client-Side Processing</h2>
             <p className="mb-6">

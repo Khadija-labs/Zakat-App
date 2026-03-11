@@ -44,7 +44,7 @@ function InputField({ icon, label, value, onChange, placeholder }: InputFieldPro
           spellCheck={false}
           autoCorrect="off"
           autoCapitalize="off"
-          className={`w-full pl-14 pr-4 py-4 text-lg bg-white border rounded-xl focus:outline-none transition-all duration-200 shadow-sm ${
+          className={`w-full pl-14 pr-4 py-4 text-lg bg-card border rounded-xl focus:outline-none transition-all duration-200 shadow-sm ${
             isFocused ? "border-primary focus:ring-2 focus:ring-primary/50" : "border-border"
           }`}
           placeholder={placeholder}
@@ -72,19 +72,21 @@ function MetalSection({ title, state, setState, theme, currencyLabel }: MetalSec
 
   return (
     <div
-      className={`p-6 rounded-2xl border ${
-        theme === "gold" ? "bg-amber-50/50 border-amber-200" : "bg-slate-50/50 border-slate-200"
-      } shadow-sm`}
+      className={`p-6 rounded-2xl border shadow-sm ${
+        theme === "gold"
+          ? "bg-amber-50/60 dark:bg-amber-950/40 border-amber-200 dark:border-amber-800/60"
+          : "bg-slate-50/60 dark:bg-slate-900/40 border-slate-200 dark:border-slate-700/60"
+      }`}
     >
       <div className="mb-4">
         <h3
           className={`font-display font-bold text-lg mb-3 ${
-            theme === "gold" ? "text-amber-700" : "text-slate-700"
+            theme === "gold" ? "text-amber-700 dark:text-amber-300" : "text-slate-700 dark:text-slate-300"
           }`}
         >
           {title}
         </h3>
-        <div className="flex bg-white rounded-lg p-1 shadow-sm border border-border w-fit">
+        <div className="flex bg-card rounded-lg p-1 shadow-sm border border-border w-fit">
           <button
             type="button"
             onClick={() => setState((prev) => ({ ...prev, unit: "grams" }))}
@@ -117,7 +119,7 @@ function MetalSection({ title, state, setState, theme, currencyLabel }: MetalSec
             spellCheck={false}
             autoCorrect="off"
             autoCapitalize="off"
-            className={`w-full px-4 py-3 border rounded-lg focus:outline-none text-base transition-all ${
+            className={`w-full px-4 py-3 border rounded-lg bg-card focus:outline-none text-base transition-all ${
               quantityFocused ? "border-primary ring-2 ring-primary focus:ring-primary" : "border-border"
             }`}
             placeholder={`e.g. ${state.unit === "tolas" ? "10" : "116"}`}
@@ -141,7 +143,7 @@ function MetalSection({ title, state, setState, theme, currencyLabel }: MetalSec
             spellCheck={false}
             autoCorrect="off"
             autoCapitalize="off"
-            className={`w-full px-4 py-3 border rounded-lg focus:outline-none text-base transition-all ${
+            className={`w-full px-4 py-3 border rounded-lg bg-card focus:outline-none text-base transition-all ${
               rateFocused ? "border-primary ring-2 ring-primary focus:ring-primary" : "border-border"
             }`}
             placeholder="e.g. 5000"
@@ -234,9 +236,9 @@ export function ZakatCalculator() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-white rounded-2xl p-6 md:p-8 shadow-gold border border-border/50 relative overflow-hidden"
+          className="bg-card rounded-2xl p-6 md:p-8 shadow-gold border border-border/50 relative overflow-hidden"
         >
-          <div className="absolute top-0 left-0 w-1 h-full bg-primary" />
+          <div className="absolute top-0 left-0 w-1 h-full bg-primary rounded-l" />
           <h2 className="text-2xl font-display font-bold text-secondary mb-6 flex items-center gap-2">
             <Coins className="text-primary w-6 h-6" /> Liquid & Invested Assets
           </h2>
@@ -285,9 +287,9 @@ export function ZakatCalculator() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-white rounded-2xl p-6 md:p-8 shadow-gold border border-border/50 relative overflow-hidden"
+          className="bg-card rounded-2xl p-6 md:p-8 shadow-gold border border-border/50 relative overflow-hidden"
         >
-          <div className="absolute top-0 left-0 w-1 h-full bg-[#D4AF37]" />
+          <div className="absolute top-0 left-0 w-1 h-full bg-primary rounded-l" />
           <h2 className="text-2xl font-display font-bold text-secondary mb-6 flex items-center gap-2">
             Precious Metals
           </h2>
@@ -302,9 +304,9 @@ export function ZakatCalculator() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="bg-white rounded-2xl p-6 md:p-8 shadow-gold border border-border/50 relative overflow-hidden"
+          className="bg-card rounded-2xl p-6 md:p-8 shadow-gold border border-border/50 relative overflow-hidden"
         >
-          <div className="absolute top-0 left-0 w-1 h-full bg-destructive" />
+          <div className="absolute top-0 left-0 w-1 h-full bg-destructive rounded-l" />
           <h2 className="text-2xl font-display font-bold text-secondary mb-6 flex items-center gap-2">
             <ShieldAlert className="text-destructive w-6 h-6" /> Deductible Liabilities
           </h2>
@@ -388,7 +390,7 @@ export function ZakatCalculator() {
 
           <button
             onClick={() => setShowSummary(false)}
-            className="w-full py-3 px-6 bg-white border border-border rounded-xl font-semibold text-secondary hover:bg-gray-50 transition-colors duration-200"
+            className="w-full py-3 px-6 bg-card border border-border rounded-xl font-semibold text-secondary hover:bg-muted transition-colors duration-200"
           >
             Modify Calculation
           </button>

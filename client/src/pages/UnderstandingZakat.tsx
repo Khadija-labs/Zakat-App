@@ -27,7 +27,7 @@ export default function UnderstandingZakat() {
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl p-8 md:p-10 shadow-gold border border-border mb-10"
+            className="bg-card rounded-2xl p-8 md:p-10 shadow-gold border border-border mb-10"
           >
             <h2 className="flex items-center gap-3 text-3xl font-bold border-b border-border pb-4">
               <Info className="text-primary w-8 h-8" /> What is Zakat?
@@ -45,7 +45,7 @@ export default function UnderstandingZakat() {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 }}
-              className="bg-amber-50 rounded-2xl p-8 border border-amber-200"
+              className="bg-amber-50 dark:bg-amber-950/40 rounded-2xl p-8 border border-amber-200 dark:border-amber-800/60"
             >
               <h3 className="text-xl font-bold text-amber-900 mb-4 flex items-center gap-2">
                 <CheckCircle2 className="text-amber-600" /> The Nisab Threshold
@@ -63,7 +63,7 @@ export default function UnderstandingZakat() {
                   <span>612.36 grams (52.5 Tolas)</span>
                 </li>
               </ul>
-              <div className="mt-4 p-3 bg-white/60 rounded-lg text-xs text-amber-900">
+              <div className="mt-4 p-3 bg-amber-100 dark:bg-amber-950/50 rounded-lg text-xs text-amber-900 dark:text-amber-200">
                 Most modern scholars advise using the Silver Nisab for calculating cash and other assets to maximize benefit to the poor.
               </div>
             </motion.div>
@@ -72,20 +72,20 @@ export default function UnderstandingZakat() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3 }}
-              className="bg-slate-50 rounded-2xl p-8 border border-slate-200"
+              className="bg-slate-50 dark:bg-slate-900/40 rounded-2xl p-8 border border-slate-200 dark:border-slate-700/60"
             >
-              <h3 className="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
-                <AlertCircle className="text-slate-500" /> Zakatable Assets
+              <h3 className="text-xl font-bold text-slate-800 dark:text-slate-200 mb-4 flex items-center gap-2">
+                <AlertCircle className="text-slate-500 dark:text-slate-400" /> Zakatable Assets
               </h3>
-              <p className="text-sm text-slate-600 mb-4">Zakat is payable on assets that have the potential to grow. These include:</p>
-              <ul className="list-disc pl-5 space-y-2 text-sm text-slate-700">
+              <p className="text-sm text-slate-600 dark:text-slate-300 mb-4">Zakat is payable on assets that have the potential to grow. These include:</p>
+              <ul className="list-disc pl-5 space-y-2 text-sm text-slate-700 dark:text-slate-300">
                 <li>Gold, silver, and precious metals</li>
                 <li>Cash in hand and bank accounts</li>
                 <li>Business merchandise / stock</li>
                 <li>Shares, stocks, and bonds</li>
                 <li>Agricultural produce and livestock</li>
               </ul>
-              <p className="text-xs text-slate-500 mt-4 italic">
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-4 italic">
                 * Personal items like your primary home, car, and clothing are exempt from Zakat.
               </p>
             </motion.div>

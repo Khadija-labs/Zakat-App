@@ -13,19 +13,19 @@ export default function Home() {
         path="/"
       />
       {/* Hero Section */}
-      <section className="relative pt-24 pb-32 overflow-hidden">
-        <div className="absolute inset-0 z-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary via-background to-background pointer-events-none" />
+      <section className="relative pt-20 pb-28 overflow-hidden">
+        <div className="absolute inset-0 z-0 opacity-[0.08] dark:opacity-[0.06] bg-[radial-gradient(ellipse_80%_60%_at_50%_0%,hsl(var(--primary)),transparent)] pointer-events-none" />
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           <div>
-            <h1 className="arabic-text text-8xl md:text-[140px] text-secondary/90 leading-none mb-4 select-none drop-shadow-sm">
+            <h1 className="arabic-text text-7xl md:text-[120px] text-secondary/90 dark:text-secondary leading-none mb-4 select-none drop-shadow-sm">
               الزكاة
             </h1>
-            <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-6">
+            <h2 className="font-display text-3xl md:text-5xl font-bold text-foreground mb-6 tracking-tight">
               Purify Your Wealth <br className="md:hidden" />
               <span className="text-gradient-gold italic">with Precision</span>
             </h2>
-            <p className="max-w-2xl mx-auto text-lg text-muted-foreground leading-relaxed font-sans">
+            <p className="max-w-2xl mx-auto text-base md:text-lg text-muted-foreground leading-relaxed font-sans">
               Calculate your Zakat accurately according to Islamic principles. 
               Our private, client-side calculator ensures your sensitive financial data never leaves your device.
             </p>
@@ -34,7 +34,7 @@ export default function Home() {
       </section>
 
       {/* Calculator Section */}
-      <section className="pb-24 -mt-10 relative z-20">
+      <section className="pb-24 -mt-6 relative z-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ZakatCalculator />
         </div>
