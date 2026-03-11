@@ -44,7 +44,7 @@ export async function createApp(): Promise<{ app: Express; httpServer: Server }>
     const originalResJson = res.json.bind(res);
     res.json = function (bodyJson: unknown, ...args: unknown[]) {
       capturedJsonResponse = bodyJson as Record<string, unknown>;
-      return originalResJson(bodyJson, ...args);
+      return (originalResJson as (...a: unknown[]) => express.Response).apply(res, [bodyJson, ...args]);
     };
 
     res.on("finish", () => {
