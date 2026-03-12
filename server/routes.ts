@@ -41,12 +41,12 @@ function getMailer() {
 
 const SITEMAP_XML = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://zakat-calculators.vercel.app/</loc><lastmod>2025-03-12</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://zakat-calculators.vercel.app/calculator</loc><lastmod>2025-03-12</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://zakat-calculators.vercel.app/about</loc><lastmod>2025-03-12</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://zakat-calculators.vercel.app/contact</loc><lastmod>2025-03-12</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://zakat-calculators.vercel.app/terms-and-conditions</loc><lastmod>2025-03-12</lastmod><changefreq>yearly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://zakat-calculators.vercel.app/privacy-policy</loc><lastmod>2025-03-12</lastmod><changefreq>yearly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://zakat-ai-calc.vercel.app/</loc><lastmod>2025-03-12</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://zakat-ai-calc.vercel.app/calculator</loc><lastmod>2025-03-12</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://zakat-ai-calc.vercel.app/about</loc><lastmod>2025-03-12</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://zakat-ai-calc.vercel.app/contact</loc><lastmod>2025-03-12</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://zakat-ai-calc.vercel.app/terms-and-conditions</loc><lastmod>2025-03-12</lastmod><changefreq>yearly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://zakat-ai-calc.vercel.app/privacy-policy</loc><lastmod>2025-03-12</lastmod><changefreq>yearly</changefreq><priority>0.5</priority></url>
 </urlset>`;
 
 export async function registerRoutes(
@@ -91,10 +91,10 @@ export async function registerRoutes(
       }
 
       await transporter.sendMail({
-        from: process.env.MAIL_FROM || `ZakatCalc Contact <${process.env.SMTP_USER}>`,
+        from: process.env.MAIL_FROM || `Zakat AI Calc Contact <${process.env.SMTP_USER}>`,
         to: MAIL_TO,
         replyTo: input.email,
-        subject: `ZakatCalc Contact from ${input.name}`,
+        subject: `Zakat AI Calc Contact from ${input.name}`,
         text: `Name: ${input.name}\nEmail: ${input.email}\n\nMessage:\n${input.message}`,
         html: `<p><strong>Name:</strong> ${input.name}</p><p><strong>Email:</strong> ${input.email}</p><p><strong>Message:</strong></p><p>${input.message.replace(/\n/g, "<br>")}</p>`,
       });

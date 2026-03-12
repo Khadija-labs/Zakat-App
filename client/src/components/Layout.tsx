@@ -73,7 +73,7 @@ export function Layout({ children }: { children: ReactNode }) {
               </div>
               <div>
                 <h1 className="font-display font-bold text-2xl text-secondary dark:text-secondary-foreground leading-none">
-                  Zakat<span className="text-primary">Calc</span>
+                  Zakat <span className="text-primary">AI</span> Calc
                 </h1>
               </div>
             </Link>
@@ -151,7 +151,7 @@ export function Layout({ children }: { children: ReactNode }) {
                 <div className="w-8 h-8 rounded-full bg-gradient-gold flex items-center justify-center">
                   <Moon className="text-white w-5 h-5" />
                 </div>
-                <h2 className="font-display font-bold text-2xl text-white">ZakatCalc</h2>
+                <h2 className="font-display font-bold text-2xl text-white">Zakat AI Calc</h2>
               </Link>
               <p className="text-secondary-foreground/80 leading-relaxed font-sans">
                 Purify your wealth with precision. A simple, professional, and secure client-side calculator for managing your Islamic obligations.
@@ -182,7 +182,7 @@ export function Layout({ children }: { children: ReactNode }) {
           </div>
           
           <div className="border-t border-white/10 pt-8 text-center text-sm font-sans text-secondary-foreground/60">
-            <p>&copy; {new Date().getFullYear()} ZakatCalc. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} Zakat AI Calc. All rights reserved.</p>
           </div>
         </div>
       </footer>

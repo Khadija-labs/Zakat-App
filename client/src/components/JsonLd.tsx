@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 
-const SITE_URL = import.meta.env.VITE_SITE_URL || "https://zakat-calculators.vercel.app";
+const SITE_URL = import.meta.env.VITE_SITE_URL || "https://zakat-ai-calc.vercel.app";
 
 const webAppSchema = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  name: "ZakatCalc – Free Zakat Calculator",
+  name: "Zakat AI Calc – Free Zakat Calculator",
   description:
     "Free online Zakat calculator. Calculate Zakat on gold, silver, cash, savings (PKR, USD, EUR). Nisab-based, private, no data stored. Purify your wealth with precision.",
   url: SITE_URL,

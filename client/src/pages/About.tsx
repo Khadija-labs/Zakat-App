@@ -7,7 +7,7 @@ export default function About() {
   return (
     <Layout>
       <SEO
-        title="About ZakatCalc"
+        title="About Zakat AI Calc"
         description="A trusted, privacy-first tool to help Muslims fulfill their Zakat obligation with clarity and confidence. Learn about our mission and values."
         path="/about"
       />
@@ -21,10 +21,10 @@ export default function About() {
             <BookOpen className="text-primary w-7 h-7" /> Our Mission
           </h2>
           <p className="text-muted-foreground leading-relaxed mb-4">
-            ZakatCalc was created to make calculating Zakat simple, accurate, and stress-free. We believe that fulfilling this pillar of Islam should not be hindered by complicated spreadsheets or uncertainty about thresholds and rates. Our goal is to provide a clear, scholarly-informed calculator that works entirely on your device—so your financial details stay private while you gain peace of mind.
+            Zakat AI Calc was created to make calculating Zakat simple, accurate, and stress-free. We believe that fulfilling this pillar of Islam should not be hindered by complicated spreadsheets or uncertainty about thresholds and rates. Our goal is to provide a clear, scholarly-informed calculator that works entirely on your device—so your financial details stay private while you gain peace of mind.
           </p>
           <p className="text-muted-foreground leading-relaxed">
-            We are not a religious authority. We encourage you to confirm your calculation and any edge cases with a qualified Islamic scholar. ZakatCalc is a tool to support your journey, not to replace scholarly guidance.
+            We are not a religious authority. We encourage you to confirm your calculation and any edge cases with a qualified Islamic scholar. Zakat AI Calc is a tool to support your journey, not to replace scholarly guidance.
           </p>
         </motion.div>
 
@@ -65,7 +65,7 @@ export default function About() {
             <Users className="w-8 h-8" /> Who We Serve
           </h3>
           <p className="text-white/90 leading-relaxed mb-4">
-            ZakatCalc is for anyone who wishes to estimate their Zakat in Pakistani Rupees (PKR) with a clean, accessible interface. Whether you are new to Zakat or have been paying for years, we aim to make the process straightforward and dignified—so you can focus on the spiritual act of giving, not on the mechanics.
+            Zakat AI Calc is for anyone who wishes to estimate their Zakat in Pakistani Rupees (PKR) with a clean, accessible interface. Whether you are new to Zakat or have been paying for years, we aim to make the process straightforward and dignified—so you can focus on the spiritual act of giving, not on the mechanics.
           </p>
           <p className="text-white/80 text-sm italic">
             We are a small team building tools in the spirit of service. If you have feedback or suggestions, we would love to hear from you via our Contact page.
@@ -75,7 +75,7 @@ export default function About() {
         <div className="mt-12 p-6 bg-primary/10 rounded-xl border border-primary/20 text-center">
           <p className="font-display font-bold text-secondary dark:text-primary text-lg mb-2">Barakallahu Feekum</p>
           <p className="text-sm text-muted-foreground">
-            May Allah accept your Zakat and purify your wealth. Thank you for trusting ZakatCalc.
+            May Allah accept your Zakat and purify your wealth. Thank you for trusting Zakat AI Calc.
           </p>
         </div>
       </div>

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-const SITE_URL = import.meta.env.VITE_SITE_URL || "https://zakat-calculators.vercel.app";
+const SITE_URL = import.meta.env.VITE_SITE_URL || "https://zakat-ai-calc.vercel.app";
 
 export interface SEOProps {
   title?: string;
@@ -13,7 +13,7 @@ export interface SEOProps {
  * Updates document title and meta tags for SEO. Use once per page near the top.
  */
 export function SEO({ title, description, path = "", noIndex = false }: SEOProps) {
-  const fullTitle = title ? `${title} | ZakatCalc` : "Free Zakat Calculator Online – ZakatCalc | Gold, Silver, Cash (PKR, USD)";
+  const fullTitle = title ? `${title} | Zakat AI Calc` : "Free Zakat Calculator Online – Zakat AI Calc | Gold, Silver, Cash (PKR, USD)";
   const fullUrl = path ? `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}` : SITE_URL;
   const desc =
     description ??

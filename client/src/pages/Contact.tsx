@@ -129,7 +129,7 @@ export default function Contact() {
     <Layout>
       <SEO
         title="Contact Us"
-        description="Have a question or feedback about ZakatCalc? Get in touch. We'd love to hear from you."
+        description="Have a question or feedback about Zakat AI Calc? Get in touch. We'd love to hear from you."
         path="/contact"
       />
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

@@ -7,7 +7,7 @@ export default function TermsAndConditions() {
     <Layout>
       <SEO
         title="Terms & Conditions"
-        description="Terms of use for ZakatCalc. An informational calculator for Zakat estimation; verify with a qualified scholar."
+        description="Terms of use for Zakat AI Calc. An informational calculator for Zakat estimation; verify with a qualified scholar."
         path="/terms-and-conditions"
       />
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -15,12 +15,12 @@ export default function TermsAndConditions() {
           <div className="prose prose-lg max-w-none text-foreground/80">
             <h2 className="font-display text-2xl font-bold text-secondary dark:text-primary mb-4">1. Acceptance of Terms</h2>
             <p className="mb-6">
-              By accessing or using ZakatCalc (“the Service”), you agree to be bound by these Terms and Conditions. If you do not agree, please do not use the Service.
+              By accessing or using Zakat AI Calc (“the Service”), you agree to be bound by these Terms and Conditions. If you do not agree, please do not use the Service.
             </p>
 
             <h2 className="font-display text-2xl font-bold text-secondary dark:text-primary mb-4">2. Nature of the Service</h2>
             <p className="mb-6">
-              ZakatCalc is an informational calculator designed to help users estimate their Zakat obligation in Pakistani Rupees (PKR). It is not a substitute for religious scholarship or a fatwa. Calculations are based on commonly cited thresholds (e.g. silver Nisab) and are intended for guidance only. You are responsible for verifying your obligation with a qualified Islamic scholar before paying Zakat.
+              Zakat AI Calc is an informational calculator designed to help users estimate their Zakat obligation in Pakistani Rupees (PKR). It is not a substitute for religious scholarship or a fatwa. Calculations are based on commonly cited thresholds (e.g. silver Nisab) and are intended for guidance only. You are responsible for verifying your obligation with a qualified Islamic scholar before paying Zakat.
             </p>
 
             <h2 className="font-display text-2xl font-bold text-secondary dark:text-primary mb-4">3. No Religious or Legal Advice</h2>
@@ -45,7 +45,7 @@ export default function TermsAndConditions() {
 
             <h2 className="font-display text-2xl font-bold text-secondary dark:text-primary mb-4">7. Limitation of Liability</h2>
             <p className="mb-6">
-              To the fullest extent permitted by law, ZakatCalc and its operators shall not be liable for any direct, indirect, incidental, or consequential damages arising from your use of the Service or reliance on its results, including but not limited to religious or financial decisions made based on the calculator.
+              To the fullest extent permitted by law, Zakat AI Calc and its operators shall not be liable for any direct, indirect, incidental, or consequential damages arising from your use of the Service or reliance on its results, including but not limited to religious or financial decisions made based on the calculator.
             </p>
 
             <h2 className="font-display text-2xl font-bold text-secondary dark:text-primary mb-4">8. Changes to Terms</h2>
@@ -61,7 +61,7 @@ export default function TermsAndConditions() {
             <div className="mt-10 p-6 bg-primary/10 rounded-xl border border-primary/20 text-center">
               <p className="font-bold text-secondary text-lg mb-2">Summary</p>
               <p className="text-sm">
-                ZakatCalc is a guidance tool only. Verify with a scholar. We do not store your calculation data. Use responsibly.
+                Zakat AI Calc is a guidance tool only. Verify with a scholar. We do not store your calculation data. Use responsibly.
               </p>
             </div>
           </div>

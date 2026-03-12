@@ -6,7 +6,7 @@ export default function PrivacyPolicy() {
     <Layout>
       <SEO
         title="Privacy Policy"
-        description="How ZakatCalc handles your data. We do not store your financial inputs; calculations run entirely on your device."
+        description="How Zakat AI Calc handles your data. We do not store your financial inputs; calculations run entirely on your device."
         path="/privacy-policy"
       />
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
