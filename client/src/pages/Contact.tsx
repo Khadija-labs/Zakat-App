@@ -1,7 +1,7 @@
 import { Layout } from "@/components/Layout";
 import { SEO } from "@/components/SEO";
 import { motion } from "framer-motion";
-import { Mail, Send } from "lucide-react";
+import { Send } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { contactFormSchema, type ContactSubmit } from "@shared/schema";
@@ -132,17 +132,7 @@ export default function Contact() {
         description="Have a question or feedback about ZakatCalc? Get in touch. We'd love to hear from you."
         path="/contact"
       />
-      <div className="bg-secondary text-secondary-foreground py-16 lg:py-24">
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <Mail className="w-12 h-12 text-primary mx-auto mb-6" />
-          <h1 className="font-display text-4xl md:text-5xl font-bold mb-6 dark:text-primary">Contact Us</h1>
-          <p className="text-xl text-secondary-foreground/80 max-w-xl mx-auto font-light leading-relaxed">
-            Have a question, suggestion, or feedback? We would love to hear from you.
-          </p>
-        </div>
-      </div>
-
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

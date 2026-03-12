@@ -1,6 +1,5 @@
 import { Layout } from "@/components/Layout";
 import { Link } from "wouter";
-import { FileText } from "lucide-react";
 import { SEO } from "@/components/SEO";
 
 export default function TermsAndConditions() {
@@ -11,15 +10,7 @@ export default function TermsAndConditions() {
         description="Terms of use for ZakatCalc. An informational calculator for Zakat estimation; verify with a qualified scholar."
         path="/terms-and-conditions"
       />
-      <div className="bg-secondary text-secondary-foreground py-16">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <FileText className="w-12 h-12 text-primary mx-auto mb-6" />
-          <h1 className="font-display text-4xl md:text-5xl font-bold mb-4 dark:text-primary">Terms & Conditions</h1>
-          <p className="text-lg text-secondary-foreground/80 font-light">Please read these terms before using ZakatCalc.</p>
-        </div>
-      </div>
-
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="bg-card rounded-3xl p-8 md:p-12 shadow-sm border border-border">
           <div className="prose prose-lg max-w-none text-foreground/80">
             <h2 className="font-display text-2xl font-bold text-secondary dark:text-primary mb-4">1. Acceptance of Terms</h2>

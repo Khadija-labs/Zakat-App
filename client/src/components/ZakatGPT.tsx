@@ -10,7 +10,7 @@ export interface ChatMessage {
 }
 
 const WELCOME =
-  "Assalamu alaikum! I'm **ZakatGPT**. Ask me anything about Zakat—rules, Nisab, what to pay on—or tell me your amounts (cash, savings, gold, etc.) and I'll calculate your Zakat for you.";
+  "Assalamu alaikum! I'm **ZakatGPT**. Ask about Zakat or share your amounts and I'll help or calculate.";
 
 export function ZakatGPT() {
   const [open, setOpen] = useState(false);
