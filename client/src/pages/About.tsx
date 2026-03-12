@@ -11,11 +11,11 @@ export default function About() {
         description="A trusted, privacy-first tool to help Muslims fulfill their Zakat obligation with clarity and confidence. Learn about our mission and values."
         path="/about"
       />
-      <div className="bg-secondary text-white py-16 lg:py-24">
+      <div className="bg-secondary text-secondary-foreground py-16 lg:py-24">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <Heart className="w-12 h-12 text-primary mx-auto mb-6" />
-          <h1 className="font-display text-4xl md:text-5xl font-bold mb-6">About ZakatCalc</h1>
-          <p className="text-xl text-white/80 max-w-2xl mx-auto font-light leading-relaxed">
+          <h1 className="font-display text-4xl md:text-5xl font-bold mb-6 dark:text-primary">About ZakatCalc</h1>
+          <p className="text-xl text-secondary-foreground/80 max-w-2xl mx-auto font-light leading-relaxed">
             A trusted, privacy-first tool to help Muslims fulfill their Zakat obligation with clarity and confidence.
           </p>
         </div>
@@ -27,7 +27,7 @@ export default function About() {
           animate={{ opacity: 1, y: 0 }}
           className="bg-card rounded-2xl p-8 md:p-10 shadow-gold border border-border mb-10"
         >
-          <h2 className="font-display text-2xl font-bold text-secondary mb-6 flex items-center gap-3">
+          <h2 className="font-display text-2xl font-bold text-secondary dark:text-primary mb-6 flex items-center gap-3">
             <BookOpen className="text-primary w-7 h-7" /> Our Mission
           </h2>
           <p className="text-muted-foreground leading-relaxed mb-4">
@@ -46,7 +46,7 @@ export default function About() {
             className="bg-amber-50 dark:bg-amber-950/40 rounded-2xl p-8 border border-amber-200 dark:border-amber-800/60"
           >
             <Calculator className="w-10 h-10 text-primary mb-4" />
-            <h3 className="font-display text-xl font-bold text-secondary mb-3">Precision & Clarity</h3>
+            <h3 className="font-display text-xl font-bold text-secondary dark:text-primary mb-3">Precision & Clarity</h3>
             <p className="text-sm text-foreground/80 leading-relaxed">
               We support multiple asset categories—cash, savings, investments, digital assets, gold, and silver—with flexible units (grams and tolas) and clear Nisab calculation so you can align with mainstream scholarly opinion.
             </p>
@@ -58,7 +58,7 @@ export default function About() {
             className="bg-slate-50 dark:bg-slate-900/40 rounded-2xl p-8 border border-slate-200 dark:border-slate-700/60"
           >
             <Shield className="w-10 h-10 text-primary mb-4" />
-            <h3 className="font-display text-xl font-bold text-secondary mb-3">Privacy by Design</h3>
+            <h3 className="font-display text-xl font-bold text-secondary dark:text-primary mb-3">Privacy by Design</h3>
             <p className="text-sm text-foreground/80 leading-relaxed">
               No database stores your numbers. All calculations run in your browser. Your wealth data never leaves your device unless you choose to contact us—and we do not log or retain that data for calculation purposes.
             </p>
@@ -83,7 +83,7 @@ export default function About() {
         </motion.div>
 
         <div className="mt-12 p-6 bg-primary/10 rounded-xl border border-primary/20 text-center">
-          <p className="font-display font-bold text-secondary text-lg mb-2">Barakallahu Feekum</p>
+          <p className="font-display font-bold text-secondary dark:text-primary text-lg mb-2">Barakallahu Feekum</p>
           <p className="text-sm text-muted-foreground">
             May Allah accept your Zakat and purify your wealth. Thank you for trusting ZakatCalc.
           </p>

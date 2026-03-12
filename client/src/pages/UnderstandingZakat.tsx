@@ -1,10 +1,42 @@
+import { useState } from "react";
 import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
-import { BookOpen, CheckCircle2, Info, AlertCircle } from "lucide-react";
+import { BookOpen, CheckCircle2, Info, AlertCircle, ChevronDown, ChevronUp } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SEO } from "@/components/SEO";
+import { AHADITH_ZAKAT, INITIAL_HADITH_COUNT, HADITH_INCREMENT } from "@/data/ahadithZakat";
+
+function HadithCard({ text, source, lang }: { text: string; source: string; lang: "en" | "ur" | "ar" }) {
+  const textClass =
+    lang === "en"
+      ? "text-lg md:text-xl font-display italic leading-relaxed font-light"
+      : lang === "ar"
+        ? "text-2xl md:text-3xl font-arabic leading-relaxed tracking-wide"
+        : "text-xl md:text-2xl font-arabic leading-relaxed";
+  return (
+    <div className="bg-white/[0.14] backdrop-blur-sm border border-white/20 rounded-2xl p-8 shadow-2xl relative">
+      <div className="absolute top-4 left-4 text-primary opacity-30 text-5xl font-display leading-none">"</div>
+      <div className="absolute bottom-4 right-4 text-primary opacity-30 text-5xl font-display leading-none">"</div>
+      <p className={`pr-8 ${textClass}`}>{text}</p>
+      <p className="mt-4 text-sm text-primary font-semibold tracking-widest uppercase">{source}</p>
+    </div>
+  );
+}
 
 export default function UnderstandingZakat() {
+  const [visibleCount, setVisibleCount] = useState(INITIAL_HADITH_COUNT);
+  const total = AHADITH_ZAKAT.length;
+  const visible = AHADITH_ZAKAT.slice(0, visibleCount);
+  const hasMore = visibleCount < total;
+  const isExpanded = visibleCount > INITIAL_HADITH_COUNT;
+
+  const handleReadMore = () => {
+    setVisibleCount((c) => Math.min(c + HADITH_INCREMENT, total));
+  };
+  const handleReadLess = () => {
+    setVisibleCount(INITIAL_HADITH_COUNT);
+  };
+
   return (
     <Layout>
       <SEO
@@ -12,11 +44,11 @@ export default function UnderstandingZakat() {
         description="A comprehensive guide to Zakat: rules, thresholds (Nisab), rates, and spiritual significance. Learn how to calculate and pay Zakat correctly."
         path="/understanding-zakat"
       />
-      <div className="bg-secondary text-white py-16 lg:py-24">
+      <div className="bg-secondary text-secondary-foreground py-16 lg:py-24">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <BookOpen className="w-12 h-12 text-primary mx-auto mb-6" />
           <h1 className="font-display text-4xl md:text-5xl font-bold mb-6">Understanding Zakat</h1>
-          <p className="text-xl text-white/80 max-w-2xl mx-auto font-light leading-relaxed">
+          <p className="text-xl text-secondary-foreground/80 max-w-2xl mx-auto font-light leading-relaxed">
             A comprehensive guide to the rules, thresholds, and spiritual significance of the third pillar of Islam.
           </p>
         </div>
@@ -105,94 +137,44 @@ export default function UnderstandingZakat() {
                 <TabsTrigger value="urdu" className="text-white/90 data-[state=active]:bg-primary data-[state=active]:text-white font-arabic">اردو</TabsTrigger>
                 <TabsTrigger value="arabic" className="text-white/90 data-[state=active]:bg-primary data-[state=active]:text-white font-arabic">العربية</TabsTrigger>
               </TabsList>
-              
+
               <div className="space-y-10">
                 <TabsContent value="english" className="m-0 space-y-10">
-                  <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 shadow-2xl relative">
-                    <div className="absolute top-4 left-4 text-primary opacity-30 text-5xl font-display leading-none">"</div>
-                    <div className="absolute bottom-4 right-4 text-primary opacity-30 text-5xl font-display leading-none">"</div>
-                    <p className="text-lg md:text-xl font-display italic leading-relaxed font-light pr-8">
-                      "Whoever is made wealthy by Allah and does not pay the Zakat of his wealth, then on the Day of Resurrection his wealth will be made like a bald-headed poisonous male snake with two black spots over the eyes."
-                    </p>
-                    <p className="mt-4 text-sm text-primary font-semibold tracking-widest uppercase">Sahih Al-Bukhari 1403</p>
-                  </div>
-                  <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 shadow-2xl relative">
-                    <div className="absolute top-4 left-4 text-primary opacity-30 text-5xl font-display leading-none">"</div>
-                    <div className="absolute bottom-4 right-4 text-primary opacity-30 text-5xl font-display leading-none">"</div>
-                    <p className="text-lg md:text-xl font-display italic leading-relaxed font-light pr-8">
-                      When the Prophet (ﷺ) sent Mu'adh to Yemen, he said: "Invite them to testify that none has the right to be worshipped but Allah and I am Allah's Messenger; and if they obey you in that, then tell them that Allah has enjoined on them five prayers; and if they obey you in that, then tell them that Allah has made Zakat obligatory for them—to be taken from the rich among them and given to the poor among them."
-                    </p>
-                    <p className="mt-4 text-sm text-primary font-semibold tracking-widest uppercase">Sahih Al-Bukhari 1395</p>
-                  </div>
-                  <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 shadow-2xl relative">
-                    <div className="absolute top-4 left-4 text-primary opacity-30 text-5xl font-display leading-none">"</div>
-                    <div className="absolute bottom-4 right-4 text-primary opacity-30 text-5xl font-display leading-none">"</div>
-                    <p className="text-lg md:text-xl font-display italic leading-relaxed font-light pr-8">
-                      When the verses of Zakat were revealed, Allah made Zakat a purifier of property. So property from which Zakat is paid is not considered hoarded wealth (Al-Kanz).
-                    </p>
-                    <p className="mt-4 text-sm text-primary font-semibold tracking-widest uppercase">Sahih Al-Bukhari 1404</p>
-                  </div>
-                  <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 shadow-2xl relative">
-                    <div className="absolute top-4 left-4 text-primary opacity-30 text-5xl font-display leading-none">"</div>
-                    <div className="absolute bottom-4 right-4 text-primary opacity-30 text-5xl font-display leading-none">"</div>
-                    <p className="text-lg md:text-xl font-display italic leading-relaxed font-light pr-8">
-                      No Sadaqah (Zakat) is due on less than five wasqs of (dates or grains), on less than five camel heads, and on less than five uqiyas of silver.
-                    </p>
-                    <p className="mt-4 text-sm text-primary font-semibold tracking-widest uppercase">Sahih Muslim 979</p>
-                  </div>
+                  {visible.map((h, i) => (
+                    <HadithCard key={i} text={h.en} source={h.source} lang="en" />
+                  ))}
                 </TabsContent>
                 <TabsContent value="urdu" className="m-0 space-y-10">
-                  <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 shadow-2xl relative">
-                    <div className="absolute top-4 left-4 text-primary opacity-30 text-5xl font-display leading-none">"</div>
-                    <div className="absolute bottom-4 right-4 text-primary opacity-30 text-5xl font-display leading-none">"</div>
-                    <p className="text-xl md:text-2xl font-arabic leading-relaxed pr-8">"جسے اللہ نے مال دیا اور اس نے اس کی زکوٰۃ ادا نہیں کی تو قیامت کے دن اس کا مال ایک گنجے زہریلے سانپ کی شکل میں کر دیا جائے گا جس کی آنکھوں پر دو سیاہ نقطے ہوں گے۔"</p>
-                    <p className="mt-4 text-sm text-primary font-semibold tracking-widest uppercase">صحیح البخاری 1403</p>
-                  </div>
-                  <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 shadow-2xl relative">
-                    <div className="absolute top-4 left-4 text-primary opacity-30 text-5xl font-display leading-none">"</div>
-                    <div className="absolute bottom-4 right-4 text-primary opacity-30 text-5xl font-display leading-none">"</div>
-                    <p className="text-xl md:text-2xl font-arabic leading-relaxed pr-8">جب نبی کریم ﷺ نے حضرت معاذ کو یمن بھیجا تو فرمایا: انہیں دعوت دو کہ اللہ کے سوا کوئی معبود نہیں اور میں اللہ کا رسول ہوں؛ اگر وہ اس پر عمل کریں تو انہیں بتاؤ کہ اللہ نے ان پر پانچ نمازیں فرض کی ہیں؛ اور اگر وہ اس پر عمل کریں تو انہیں بتاؤ کہ اللہ نے ان پر زکوٰۃ فرض کی ہے—ان کے مالداروں سے لی جائے اور ان کے غریبوں میں دی جائے۔</p>
-                    <p className="mt-4 text-sm text-primary font-semibold tracking-widest uppercase">صحیح البخاری 1395</p>
-                  </div>
-                  <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 shadow-2xl relative">
-                    <div className="absolute top-4 left-4 text-primary opacity-30 text-5xl font-display leading-none">"</div>
-                    <div className="absolute bottom-4 right-4 text-primary opacity-30 text-5xl font-display leading-none">"</div>
-                    <p className="text-xl md:text-2xl font-arabic leading-relaxed pr-8">جب زکوٰۃ کی آیات نازل ہوئیں تو اللہ نے زکوٰۃ کو مال کی طہارت قرار دیا۔ پس جس مال سے زکوٰۃ ادا کی جائے وہ کنز (ذخیرہ) میں شمار نہیں ہوتا۔</p>
-                    <p className="mt-4 text-sm text-primary font-semibold tracking-widest uppercase">صحیح البخاری 1404</p>
-                  </div>
-                  <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 shadow-2xl relative">
-                    <div className="absolute top-4 left-4 text-primary opacity-30 text-5xl font-display leading-none">"</div>
-                    <div className="absolute bottom-4 right-4 text-primary opacity-30 text-5xl font-display leading-none">"</div>
-                    <p className="text-xl md:text-2xl font-arabic leading-relaxed pr-8">پانچ وسق سے کم (کھجور یا اناج) پر، پانچ اونٹوں سے کم پر، اور پانچ اوقیہ چاندی سے کم پر کوئی صدقہ (زکوٰۃ) واجب نہیں۔</p>
-                    <p className="mt-4 text-sm text-primary font-semibold tracking-widest uppercase">صحیح مسلم 979</p>
-                  </div>
+                  {visible.map((h, i) => (
+                    <HadithCard key={i} text={h.ur} source={h.source} lang="ur" />
+                  ))}
                 </TabsContent>
                 <TabsContent value="arabic" className="m-0 space-y-10">
-                  <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 shadow-2xl relative">
-                    <div className="absolute top-4 left-4 text-primary opacity-30 text-5xl font-display leading-none">"</div>
-                    <div className="absolute bottom-4 right-4 text-primary opacity-30 text-5xl font-display leading-none">"</div>
-                    <p className="text-2xl md:text-3xl font-arabic leading-relaxed tracking-wide pr-8">"مَنْ آتَاهُ اللَّهُ مَالًا فَلَمْ يُؤَدِّ زَكَاتَهُ، مُثِّلَ لَهُ مَالُهُ يَوْمَ الْقِيَامَةِ شُجَاعًا أَقْرَعَ لَهُ زَبِيبَتَانِ..."</p>
-                    <p className="mt-4 text-sm text-primary font-semibold tracking-widest uppercase">صحيح البخاري 1403</p>
-                  </div>
-                  <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 shadow-2xl relative">
-                    <div className="absolute top-4 left-4 text-primary opacity-30 text-5xl font-display leading-none">"</div>
-                    <div className="absolute bottom-4 right-4 text-primary opacity-30 text-5xl font-display leading-none">"</div>
-                    <p className="text-2xl md:text-3xl font-arabic leading-relaxed tracking-wide pr-8">"إِنَّكَ تَقْدَمُ عَلَى قَوْمٍ أَهْلِ كِتَابٍ، فَلْيَكُنْ أَوَّلَ مَا تَدْعُوهُمْ إِلَيْهِ عِبَادَةُ اللَّهِ، فَإِذَا عَرَفُوا اللَّهَ فَأَخْبِرْهُمْ أَنَّ اللَّهَ فَرَضَ عَلَيْهِمْ خَمْسَ صَلَوَاتٍ... وَأَخْبِرْهُمْ أَنَّ اللَّهَ افْتَرَضَ عَلَيْهِمْ زَكَاةً فِي أَمْوَالِهِمْ تُؤْخَذُ مِنْ أَغْنِيَائِهِمْ وَتُرَدُّ عَلَى فُقَرَائِهِمْ."</p>
-                    <p className="mt-4 text-sm text-primary font-semibold tracking-widest uppercase">صحيح البخاري 1395</p>
-                  </div>
-                  <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 shadow-2xl relative">
-                    <div className="absolute top-4 left-4 text-primary opacity-30 text-5xl font-display leading-none">"</div>
-                    <div className="absolute bottom-4 right-4 text-primary opacity-30 text-5xl font-display leading-none">"</div>
-                    <p className="text-2xl md:text-3xl font-arabic leading-relaxed tracking-wide pr-8">"لَمَّا أُنْزِلَتْ آيَةُ الزَّكَاةِ، جَعَلَ اللَّهُ الزَّكَاةَ طُهْرَةً لِلْمَالِ، فَلَيْسَ فِي مَالٍ زَكَاةٌ يُؤَدَّى مِنْهُ كَنْزٌ."</p>
-                    <p className="mt-4 text-sm text-primary font-semibold tracking-widest uppercase">صحيح البخاري 1404</p>
-                  </div>
-                  <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 shadow-2xl relative">
-                    <div className="absolute top-4 left-4 text-primary opacity-30 text-5xl font-display leading-none">"</div>
-                    <div className="absolute bottom-4 right-4 text-primary opacity-30 text-5xl font-display leading-none">"</div>
-                    <p className="text-2xl md:text-3xl font-arabic leading-relaxed tracking-wide pr-8">"لَيْسَ فِيمَا دُونَ خَمْسَةِ أَوْسُقٍ صَدَقَةٌ، وَلَيْسَ فِيمَا دُونَ خَمْسِ ذَوْدٍ صَدَقَةٌ، وَلَيْسَ فِيمَا دُونَ خَمْسِ أَوَاقٍ صَدَقَةٌ."</p>
-                    <p className="mt-4 text-sm text-primary font-semibold tracking-widest uppercase">صحيح مسلم 979</p>
-                  </div>
+                  {visible.map((h, i) => (
+                    <HadithCard key={i} text={h.ar} source={h.source} lang="ar" />
+                  ))}
                 </TabsContent>
+              </div>
+
+              <div className="mt-8 flex justify-center gap-3 flex-wrap">
+                {hasMore && (
+                  <button
+                    type="button"
+                    onClick={handleReadMore}
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-primary-foreground font-semibold hover:opacity-90 transition-opacity"
+                  >
+                    Read more <ChevronDown className="w-4 h-4" />
+                  </button>
+                )}
+                {isExpanded && (
+                  <button
+                    type="button"
+                    onClick={handleReadLess}
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/10 border border-white/20 text-white font-semibold hover:bg-white/20 transition-colors"
+                  >
+                    Read less <ChevronUp className="w-4 h-4" />
+                  </button>
+                )}
               </div>
             </Tabs>
           </div>

@@ -1,21 +1,55 @@
 import { ReactNode, useState } from "react";
 import { Link, useLocation } from "wouter";
-import { Moon, Sun, HeartHandshake, FileText, Menu, X, Users, Mail, Scale } from "lucide-react";
+import { Moon, Sun, Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "@/context/ThemeContext";
+
+function ThemeToggle() {
+  const { theme, toggleTheme } = useTheme();
+  const isDark = theme === "dark";
+
+  return (
+    <button
+      type="button"
+      onClick={toggleTheme}
+      className="relative inline-flex h-7 w-14 items-center rounded-full bg-input shadow-inner transition-colors duration-200 border border-border/60"
+      role="switch"
+      aria-checked={isDark}
+      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+    >
+      <span
+        className={`pointer-events-none inline-flex h-5 w-5 transform rounded-full bg-background shadow-md transition-transform duration-200 items-center justify-center ${
+          isDark ? "translate-x-[1.6rem]" : "translate-x-[0.1rem]"
+        }`}
+      />
+      <span className="absolute inset-0 flex items-center justify-between px-1.5 pointer-events-none">
+        <Sun
+          className={`h-3.5 w-3.5 transition-opacity duration-200 ${
+            isDark ? "opacity-0" : "opacity-100 text-amber-500"
+          }`}
+          aria-hidden
+        />
+        <Moon
+          className={`h-3.5 w-3.5 transition-opacity duration-200 ${
+            isDark ? "opacity-100 text-sky-400" : "opacity-0"
+          }`}
+          aria-hidden
+        />
+      </span>
+    </button>
+  );
+}
 
 export function Layout({ children }: { children: ReactNode }) {
   const [location] = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { theme, toggleTheme } = useTheme();
 
   const navLinks = [
-    { href: "/", label: "Calculator", icon: <HeartHandshake className="w-4 h-4" /> },
-    { href: "/understanding-zakat", label: "Understanding Zakat", icon: <Moon className="w-4 h-4" /> },
-    { href: "/about", label: "About Us", icon: <Users className="w-4 h-4" /> },
-    { href: "/contact", label: "Contact Us", icon: <Mail className="w-4 h-4" /> },
-    { href: "/terms-and-conditions", label: "Terms and Conditions", icon: <Scale className="w-4 h-4" /> },
-    { href: "/privacy-policy", label: "Privacy and Policies", icon: <FileText className="w-4 h-4" /> },
+    { href: "/calculator", label: "Calculator" },
+    { href: "/about", label: "About Us" },
+    { href: "/contact", label: "Contact Us" },
+    { href: "/terms-and-conditions", label: "Terms and Conditions" },
+    { href: "/privacy-policy", label: "Privacy and Policies" },
   ];
 
   return (
@@ -25,16 +59,20 @@ export function Layout({ children }: { children: ReactNode }) {
         بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيم
       </div>
 
-      <header className="sticky top-0 z-50 bg-background/90 backdrop-blur-md border-b border-border/50 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <header
+        className={`sticky top-0 z-50 backdrop-blur-md border-b border-border/50 shadow-sm ${
+          location === "/" ? "bg-slate-200 dark:bg-slate-800" : "bg-background/90"
+        }`}
+      >
+        <div className="max-w-7xl mx-auto pl-1 pr-4 sm:pl-2 sm:pr-6 lg:pl-3 lg:pr-8">
           <div className="flex justify-between items-center h-20">
             {/* Logo Area */}
-            <Link href="/" className="flex items-center gap-3 group">
+            <Link href="/" className="flex items-center gap-3 group shrink-0">
               <div className="w-10 h-10 rounded-full bg-gradient-gold flex items-center justify-center shadow-md group-hover:scale-105 transition-transform duration-300">
                 <Moon className="text-white w-6 h-6" />
               </div>
               <div>
-                <h1 className="font-display font-bold text-2xl text-secondary leading-none">
+                <h1 className="font-display font-bold text-2xl text-secondary dark:text-secondary-foreground leading-none">
                   Zakat<span className="text-primary">Calc</span>
                 </h1>
               </div>
@@ -46,33 +84,20 @@ export function Layout({ children }: { children: ReactNode }) {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`flex items-center gap-2 font-medium transition-colors hover:text-primary ${
+                  className={`font-medium transition-colors hover:text-primary ${
                     location === link.href ? "text-primary" : "text-foreground/80"
                   }`}
                 >
-                  {link.icon}
                   {link.label}
                 </Link>
               ))}
-              <button
-                type="button"
-                onClick={toggleTheme}
-                className="p-2.5 rounded-xl bg-muted hover:bg-muted/80 text-foreground transition-colors"
-                aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-              >
-                {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-              </button>
+              <ThemeToggle />
             </nav>
 
             <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={toggleTheme}
-                className="md:hidden p-2.5 rounded-xl bg-muted hover:bg-muted/80 text-foreground transition-colors"
-                aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-              >
-                {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-              </button>
+              <div className="md:hidden flex items-center gap-2" aria-label="Theme">
+                <ThemeToggle />
+              </div>
               <button
                 className="md:hidden p-2 text-foreground hover:bg-muted rounded-lg transition-colors"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -99,13 +124,12 @@ export function Layout({ children }: { children: ReactNode }) {
                   key={link.href}
                   href={link.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={`flex items-center gap-3 p-3 rounded-lg ${
+                  className={`p-3 rounded-lg font-medium ${
                     location === link.href
                       ? "bg-primary/10 text-primary font-bold"
                       : "text-foreground hover:bg-muted"
                   }`}
                 >
-                  {link.icon}
                   {link.label}
                 </Link>
               ))}
@@ -137,8 +161,8 @@ export function Layout({ children }: { children: ReactNode }) {
             <div>
               <h3 className="font-display font-bold text-xl text-primary mb-6">Quick Links</h3>
               <ul className="space-y-4 font-sans text-secondary-foreground/80">
-                <li><Link href="/" className="hover:text-primary transition-colors">Calculator</Link></li>
-                <li><Link href="/understanding-zakat" className="hover:text-primary transition-colors">Understanding Zakat</Link></li>
+                <li><Link href="/" className="hover:text-primary transition-colors">Home</Link></li>
+                <li><Link href="/calculator" className="hover:text-primary transition-colors">Calculator</Link></li>
                 <li><Link href="/about" className="hover:text-primary transition-colors">About Us</Link></li>
                 <li><Link href="/contact" className="hover:text-primary transition-colors">Contact Us</Link></li>
                 <li><Link href="/terms-and-conditions" className="hover:text-primary transition-colors">Terms and Conditions</Link></li>

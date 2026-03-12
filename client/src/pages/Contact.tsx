@@ -132,11 +132,11 @@ export default function Contact() {
         description="Have a question or feedback about ZakatCalc? Get in touch. We'd love to hear from you."
         path="/contact"
       />
-      <div className="bg-secondary text-white py-16 lg:py-24">
+      <div className="bg-secondary text-secondary-foreground py-16 lg:py-24">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <Mail className="w-12 h-12 text-primary mx-auto mb-6" />
-          <h1 className="font-display text-4xl md:text-5xl font-bold mb-6">Contact Us</h1>
-          <p className="text-xl text-white/80 max-w-xl mx-auto font-light leading-relaxed">
+          <h1 className="font-display text-4xl md:text-5xl font-bold mb-6 dark:text-primary">Contact Us</h1>
+          <p className="text-xl text-secondary-foreground/80 max-w-xl mx-auto font-light leading-relaxed">
             Have a question, suggestion, or feedback? We would love to hear from you.
           </p>
         </div>
@@ -159,7 +159,7 @@ export default function Contact() {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-secondary font-semibold">Name</FormLabel>
+                    <FormLabel className="text-foreground dark:text-primary font-semibold">Name</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Your name"
@@ -176,7 +176,7 @@ export default function Contact() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-secondary font-semibold">Email</FormLabel>
+                    <FormLabel className="text-foreground dark:text-primary font-semibold">Email</FormLabel>
                     <FormControl>
                       <Input
                         type="email"
@@ -194,7 +194,7 @@ export default function Contact() {
                 name="message"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-secondary font-semibold">Message</FormLabel>
+                    <FormLabel className="text-foreground dark:text-primary font-semibold">Message</FormLabel>
                     <FormControl>
                       <Textarea
                         placeholder="Your message (emojis welcome!)"
