@@ -5,8 +5,76 @@ import OpenAI from "openai";
 import { api } from "@shared/routes";
 import { chatRequestSchema } from "@shared/schema";
 import { calculateZakat } from "./zakatCalc";
-import { ZAKAT_ASSISTANT_SYSTEM_PROMPT, ZAKATGPT_CALCULATE_TOOL } from "./prompts/zakatgpt";
+import { getZakatAssistantSystemPrompt, getDefaultRates, ZAKATGPT_CALCULATE_TOOL } from "./prompts/zakatgpt";
 import { z } from "zod";
+
+/** Normalize user message for parsing (collapse spaces, trim). */
+function normalizeMessage(text: string): string {
+  return String(text).replace(/\s+/g, " ").trim();
+}
+
+/** Parse user message for gold/silver tolas. "X tolas" without "silver" = gold. "tolas gold" with no number = 1 tola. */
+function parseTolasFromMessage(text: string): { goldQty: number; silverQty: number } {
+  const t = normalizeMessage(text);
+  const goldMatch =
+    t.match(/(\d+(?:\.\d+)?)\s*tolas?\s*(?:of\s+)?gold/i) ??
+    t.match(/(\d+(?:\.\d+)?)\s*tolas?\s*gold/i) ??
+    t.match(/(\d+(?:\.\d+)?)\s*gold/i);
+  const silverMatch = t.match(/(\d+(?:\.\d+)?)\s*tolas?\s*silver/i) ?? t.match(/(\d+(?:\.\d+)?)\s*silver/i);
+  const plainTolas = t.match(/(\d+(?:\.\d+)?)\s*tolas?(?!\s*silver)/i);
+  let goldQty = goldMatch ? Number(goldMatch[1]) : 0;
+  const silverQty = silverMatch ? Number(silverMatch[1]) : 0;
+  if (goldQty === 0 && plainTolas && !/silver/i.test(t)) goldQty = Number(plainTolas[1]);
+  if (goldQty === 0 && /\d+/.test(t) && /gold/i.test(t) && /tola/i.test(t)) {
+    const numMatch = t.match(/(\d+(?:\.\d+)?)/);
+    if (numMatch) goldQty = Number(numMatch[1]);
+  }
+  // "tolas gold" or "tola gold" (with or without "of") and no number = 1 tola when asking for calculation
+  if (goldQty === 0 && /tolas?\s*(?:of\s+)?gold|gold.*tolas?/i.test(t) && /zakat|calculate|amount|give|tell|how much|my zakat/i.test(t))
+    goldQty = 1;
+  return { goldQty, silverQty };
+}
+
+/** True if we should always use server-side calculation (no LLM). */
+function isDirectCalculationRequest(content: string): boolean {
+  const t = normalizeMessage(content);
+  if (!/tola/i.test(t) && !/gold/i.test(t)) return false;
+  if (!/zakat|calculate|amount|give|tell|how much|my zakat/i.test(t)) return false;
+  const { goldQty, silverQty } = parseTolasFromMessage(t);
+  return goldQty > 0 || silverQty > 0;
+}
+
+function formatNum(n: number): string {
+  return n.toLocaleString("en-PK", { maximumFractionDigits: 0 });
+}
+
+/** Build breakdown text from calculation result and env rates (no LLM). */
+function formatZakatBreakdown(
+  result: { netWealth: number; nisabThreshold: number; isEligible: boolean; zakatAmount: number; currency: string },
+  goldQty: number,
+  silverQty: number,
+  rates: { goldPerTola: number; silverPerTola: number; currency: string }
+): string {
+  const sym = rates.currency === "PKR" ? "Rs. " : rates.currency === "USD" ? "$" : rates.currency + " ";
+  const parts: string[] = [];
+  if (goldQty > 0) {
+    const goldVal = goldQty * rates.goldPerTola;
+    parts.push(`Gold: ${goldQty} tola(s) × ${formatNum(rates.goldPerTola)} per tola = ${sym}${formatNum(goldVal)}.`);
+  }
+  if (silverQty > 0) {
+    const silverVal = silverQty * rates.silverPerTola;
+    parts.push(`Silver: ${silverQty} tola(s) × ${formatNum(rates.silverPerTola)} per tola = ${sym}${formatNum(silverVal)}.`);
+  }
+  parts.push(`Nisab (52.5 tolas silver): ${formatNum(rates.silverPerTola)} × 52.5 = ${sym}${formatNum(result.nisabThreshold)}.`);
+  if (result.isEligible) {
+    parts.push(`Your net wealth ${sym}${formatNum(result.netWealth)} is above Nisab, so Zakat applies.`);
+    parts.push(`Zakat (2.5%) = ${sym}${formatNum(result.zakatAmount)}.`);
+  } else {
+    parts.push(`Your net wealth ${sym}${formatNum(result.netWealth)} is below Nisab, so no Zakat is due.`);
+  }
+  parts.push("You can share your own gold/silver rates if you want a different calculation.");
+  return parts.join(" ");
+}
 
 const MAIL_TO = process.env.MAIL_TO || "khadija.amin.dev@gmail.com";
 const RECAPTCHA_SECRET = process.env.RECAPTCHA_SECRET_KEY;
@@ -136,20 +204,48 @@ export async function registerRoutes(
         return sendError(400, "Request body is required (JSON with messages array).");
       }
       const body = chatRequestSchema.parse(req.body);
+      const lastMsg = body.messages[body.messages.length - 1];
+      const lastContent = (lastMsg?.role === "user" && typeof lastMsg.content === "string") ? lastMsg.content : "";
+      const { goldQty, silverQty } = parseTolasFromMessage(lastContent);
+      const useDirectPath = isDirectCalculationRequest(lastContent);
+      const looksLikeCalculation = /\b(gold|silver|tolas?|grams?|zakat|calculate|amount|give me|tell me|how much)\b/i.test(lastContent);
+
+      // Direct path: answer with server-side calculation only; never call LLM for "X tolas gold" type requests
+      if (useDirectPath && (goldQty > 0 || silverQty > 0)) {
+        if (process.env.NODE_ENV !== "production") {
+          console.log("[chat] direct path: gold=" + goldQty + " silver=" + silverQty);
+        }
+        const rates = getDefaultRates();
+        const goldValue = goldQty * rates.goldPerTola;
+        const silverValue = silverQty * rates.silverPerTola;
+        const result = calculateZakat({
+          goldValue,
+          silverValue,
+          silverRatePerTola: rates.silverPerTola,
+          currency: rates.currency,
+        });
+        const reply = formatZakatBreakdown(result, goldQty, silverQty, rates);
+        return res.status(200).json({
+          message: { role: "assistant" as const, content: reply },
+        });
+      }
+
       const openaiKey = process.env.OPENAI_API_KEY;
       if (!openaiKey) {
         return sendError(503, "ZakatGPT is not configured. Please set OPENAI_API_KEY in Vercel project settings.");
       }
       const openai = new OpenAI({ apiKey: openaiKey });
+      const systemPrompt = getZakatAssistantSystemPrompt();
       const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
-        { role: "system", content: ZAKAT_ASSISTANT_SYSTEM_PROMPT },
+        { role: "system", content: systemPrompt },
         ...body.messages.map((m) => ({ role: m.role, content: m.content })),
       ];
+      const forceTool = looksLikeCalculation ? { type: "function" as const, function: { name: "calculate_zakat" as const } } : "auto";
       let response = await openai.chat.completions.create({
         model: "gpt-4o-mini",
         messages,
         tools: [ZAKATGPT_CALCULATE_TOOL],
-        tool_choice: "auto",
+        tool_choice: forceTool,
       });
       const choice = response.choices[0];
       if (!choice?.message) {
@@ -159,12 +255,26 @@ export async function registerRoutes(
       if (assistantMessage.tool_calls && assistantMessage.tool_calls.length > 0) {
         const toolCall = assistantMessage.tool_calls[0];
         if (toolCall.function?.name === "calculate_zakat") {
-          const args = JSON.parse(toolCall.function.arguments || "{}");
+          let args = JSON.parse(toolCall.function.arguments || "{}");
+          if (looksLikeCalculation) {
+            const rates = getDefaultRates();
+            const goldMatch = lastContent.match(/(\d+(?:\.\d+)?)\s*tolas?\s*gold/i) ?? lastContent.match(/(\d+(?:\.\d+)?)\s*gold/i);
+            const silverMatch = lastContent.match(/(\d+(?:\.\d+)?)\s*tolas?\s*silver/i) ?? lastContent.match(/(\d+(?:\.\d+)?)\s*silver/i);
+            const plainTolasMatch = lastContent.match(/(\d+(?:\.\d+)?)\s*tolas?(?!\s*silver)/i);
+            let goldQty = goldMatch ? Number(goldMatch[1]) : 0;
+            const silverQty = silverMatch ? Number(silverMatch[1]) : 0;
+            if (goldQty === 0 && plainTolasMatch && !/silver/i.test(lastContent)) goldQty = Number(plainTolasMatch[1]);
+            if (goldQty > 0 && (args.goldValue == null || args.goldValue === 0)) args.goldValue = goldQty * rates.goldPerTola;
+            if (silverQty > 0 && (args.silverValue == null || args.silverValue === 0)) args.silverValue = silverQty * rates.silverPerTola;
+            if (args.silverRatePerTola == null || args.silverRatePerTola === 0) args.silverRatePerTola = rates.silverPerTola;
+            if (!args.currency) args.currency = rates.currency;
+          }
           const result = calculateZakat({
             cash: args.cash,
             savings: args.savings,
             investments: args.investments,
             digitalAssets: args.digitalAssets,
+            goldValue: args.goldValue,
             silverValue: args.silverValue,
             otherAssets: args.otherAssets,
             liabilities: args.liabilities,

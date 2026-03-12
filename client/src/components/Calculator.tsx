@@ -232,7 +232,7 @@ export function ZakatCalculator() {
   const [investments, setInvestments] = useState<string>("");
   const [digitalAssets, setDigitalAssets] = useState<string>("");
 
-  // Precious Metals (default gold/silver rates from env when PKR)
+  // Precious Metals: gold and silver into amount (qty × rate); Nisab from silver 52.5 tolas
   const [gold, setGold] = useState<MetalState>({
     quantity: "",
     unit: "tolas",
@@ -264,8 +264,7 @@ export function ZakatCalculator() {
 
     const goldRatePerTola = parseNum(gold.ratePerTola);
     const goldRatePerGram = goldRatePerTola / TOLA_GRAM;
-    const goldVal =
-      parseNum(gold.quantity) * (gold.unit === "tolas" ? goldRatePerTola : goldRatePerGram);
+    const goldVal = parseNum(gold.quantity) * (gold.unit === "tolas" ? goldRatePerTola : goldRatePerGram);
 
     const silverRatePerTola = parseNum(silver.ratePerTola);
     const silverRatePerGram = silverRatePerTola / TOLA_GRAM;
@@ -295,6 +294,7 @@ export function ZakatCalculator() {
       isEligible,
       dynamicNisab,
       silverRateProvided: silverRatePerTola > 0,
+      silverRatePerTola: silverRatePerTola > 0 ? silverRatePerTola : undefined,
     };
   }, [cash, savings, investments, digitalAssets, gold, silver, liabilities]);
 
@@ -426,9 +426,12 @@ export function ZakatCalculator() {
                   <span className="font-bold font-sans text-sm">{formatAmount(currencySymbol, calculation.netWealth)}</span>
                 </div>
                 <div className="bg-white/5 rounded-lg p-3 border border-white/10">
-                  <p className="text-xs text-white/60 mb-1.5 uppercase tracking-wider font-bold">Nisab (Silver basis)</p>
-                  <div className="flex items-center gap-2 mb-1">
+                  <p className="text-xs text-white/60 mb-1.5 uppercase tracking-wider font-bold">Nisab (52.5 tolas silver)</p>
+                  <div className="flex flex-wrap items-center gap-2 mb-1">
                     <span className="font-bold font-sans text-sm">{formatAmount(currencySymbol, calculation.dynamicNisab)}</span>
+                    {calculation.silverRateProvided && calculation.silverRatePerTola != null && (
+                      <span className="text-[10px] text-white/60">rate × 52.5</span>
+                    )}
                     {!calculation.silverRateProvided && (
                       <span className="text-[10px] bg-primary/20 text-primary px-2 py-0.5 rounded-full border border-primary/30">Est.</span>
                     )}
