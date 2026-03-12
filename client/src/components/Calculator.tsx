@@ -129,9 +129,9 @@ function MetalSection({ title, state, setState, theme, currencyLabel, currencySy
           </button>
         </div>
       </div>
-      {/* Two-row layout: Quantity then two rate columns (equal width) — fixes alignment when "Tolas" and long rate per tola */}
+      {/* Two-row layout: Quantity full width, then Rate per tola | Rate per gram (equal) — fixes Tolas alignment */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div className="min-w-0">
+        <div className="min-w-0 sm:col-span-2">
           <label className="block text-xs font-semibold text-foreground/70 mb-1">
             Quantity ({state.unit})
           </label>
