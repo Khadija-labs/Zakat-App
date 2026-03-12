@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://zakatcalc.app/sitemap.xml
+Sitemap: https://zakat-app-wine.vercel.app/sitemap.xml
