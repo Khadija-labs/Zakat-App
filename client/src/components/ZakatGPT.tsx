@@ -1,8 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, Send, X, Loader2, MessageSquarePlus } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 
 export interface ChatMessage {
   role: "user" | "assistant";
@@ -10,7 +8,7 @@ export interface ChatMessage {
 }
 
 const WELCOME =
-  "Assalamu alaikum! I'm **ZakatGPT**. Ask about Zakat or share your amounts and I'll help or calculate.";
+  "Assalamu alaikum! I'm ZakatGPT, your AI assistant for Zakat. Ask me anything about rules, Nisab, or share your amounts and I'll calculate for you.";
 
 export function ZakatGPT() {
   const [open, setOpen] = useState(false);
@@ -100,7 +98,12 @@ export function ZakatGPT() {
                 <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
                   <MessageCircle className="w-4 h-4 text-primary" />
                 </div>
-                <span className="font-display font-bold text-lg">ZakatGPT</span>
+                <div className="flex items-center gap-2">
+                  <span className="font-display font-bold text-lg">ZakatGPT</span>
+                  <span className="px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider rounded bg-primary/30 text-primary border border-primary/40">
+                    AI
+                  </span>
+                </div>
               </div>
               <div className="flex items-center gap-1">
                 <button
@@ -139,8 +142,14 @@ export function ZakatGPT() {
                         : "bg-muted text-foreground"
                     }`}
                   >
-                    <div className="whitespace-pre-wrap break-words">
-                      {msg.content}
+                    <div className="whitespace-pre-wrap break-words [&>strong]:font-semibold">
+                      {msg.role === "assistant"
+                        ? msg.content.split(/(\*\*[^*]+\*\*)/g).map((part, j) =>
+                            part.startsWith("**") && part.endsWith("**")
+                              ? <strong key={j}>{part.slice(2, -2)}</strong>
+                              : part
+                          )
+                        : msg.content}
                     </div>
                   </div>
                 </div>
@@ -156,25 +165,29 @@ export function ZakatGPT() {
                 <p className="text-sm text-destructive px-2">{error}</p>
               )}
             </div>
-            <div className="p-3 border-t border-border flex gap-2">
-              <Textarea
-                placeholder="Ask about Zakat or give amounts to calculate..."
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                rows={1}
-                className="min-h-[44px] max-h-24 resize-none"
-                disabled={loading}
-              />
-              <Button
-                type="button"
-                size="icon"
-                className="shrink-0 h-11 w-11 rounded-xl bg-primary hover:bg-primary/90"
-                onClick={send}
-                disabled={loading || !input.trim()}
-              >
-                <Send className="w-4 h-4" />
-              </Button>
+            <div className="p-3 border-t border-border bg-muted/30">
+              <div className="flex items-center gap-2 rounded-xl border-2 border-border bg-background focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-all pl-4 pr-2 py-2 min-h-[52px]">
+                <textarea
+                  placeholder="Type here..."
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  rows={1}
+                  disabled={loading}
+                  className="flex-1 min-h-[36px] max-h-20 py-2.5 resize-none bg-transparent text-foreground placeholder:text-muted-foreground text-sm focus:outline-none disabled:opacity-60 [scrollbar-width:thin]"
+                  aria-label="Type your message"
+                />
+                <button
+                  type="button"
+                  onClick={send}
+                  disabled={loading || !input.trim()}
+                  className="shrink-0 p-2.5 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 disabled:pointer-events-none transition-colors h-10 w-10 flex items-center justify-center"
+                  aria-label="Send message"
+                >
+                  <Send className="w-4 h-4" />
+                </button>
+              </div>
+              <p className="text-[10px] text-muted-foreground mt-1.5 px-1">Powered by AI · Your data stays private</p>
             </div>
           </motion.div>
         )}
