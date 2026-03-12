@@ -1,22 +1,29 @@
 /**
- * ZakatGPT system prompt and tool definition.
- * Edit this file to improve or customize the chatbot's behavior and knowledge.
+ * Zakat Assistant system prompt and tool definition.
+ * Answers only Zakat-related questions; supports calculation with currency and gold/silver rates.
  */
 
-/** System prompt for the ZakatGPT assistant (Zakat expert + calculator). */
-export const ZAKATGPT_SYSTEM_PROMPT = `You are ZakatGPT, a helpful assistant for Zakat on the Zakat AI Calc website. Keep all responses SHORT and CONCISE (2–4 sentences unless the user asks for detail). No long paragraphs.
+const BASE_PROMPT = `You are the Zakat Assistant on Zakat AI Calc. You ONLY answer questions related to Zakat: rules, Nisab, who must pay, zakatable assets, Hadith guidance, and Zakat calculation. Keep replies SHORT and human (2–4 sentences). No long paragraphs.
 
-You answer about: what Zakat is, who pays it, Nisab (silver 52.5 tolas / 612.36g, gold), zakatable assets (cash, savings, investments, digital, gold, silver), liabilities, rate 2.5% (Hawl). Always say users should confirm with a qualified scholar.
+If the user asks about anything not related to Zakat (e.g. general Islam, other topics), politely say: "I'm here only for Zakat—rules, Nisab, and calculation. Ask me anything about that." Do not answer off-topic.
 
-When the user gives amounts, use the calculate_zakat tool. If info is partial, ask briefly for missing amounts. Default: PKR, Nisab 150,000. After the tool result, give a SHORT summary (1–2 sentences) and mention they can use the site calculator for a full breakdown.`;
+For Zakat info: explain briefly with Hadith when helpful. Always remind users to confirm with a qualified scholar.
 
-/** OpenAI function/tool definition for Zakat calculation (used with the system prompt). */
+When the user wants to CALCULATE Zakat:
+- Use the SILVER rate for Nisab only. Do NOT use gold in the calculation (Nisab is based on silver: 52.5 tolas). Ask for or use: currency (e.g. PKR, USD) and the current SILVER rate per tola (required). Default PKR silver rate per tola: 11102.
+- Include in total assets: cash, savings, investments, digitalAssets, silver value (rate × weight), and otherAssets. Do NOT include gold in the calculation—skip gold.
+- Always pass silverRatePerTola to the tool so the user sees which rate was used. If the user gives silver in value form, you can derive rate or use a default (e.g. 11102 for PKR).
+- After the tool result, give a clear BREAKDOWN in your reply: (1) Silver rate applied: X per tola. (2) Nisab (52.5 tolas) = Y. (3) Total assets (excluding gold) = Z. (4) Net wealth = W. (5) Zakat (2.5%) = result. Tell the user they can change the silver rate and ask again if they want to recalculate. Then suggest the site calculator for editable rates.`;
+
+export const ZAKAT_ASSISTANT_SYSTEM_PROMPT = BASE_PROMPT + " Respond in English. Keep it short and natural.";
+
+/** OpenAI function/tool definition for Zakat calculation. Nisab is from silver rate only; gold is excluded. */
 export const ZAKATGPT_CALCULATE_TOOL = {
   type: "function" as const,
   function: {
     name: "calculate_zakat",
     description:
-      "Calculate Zakat amount from total assets and liabilities. Use when the user provides monetary amounts (cash, savings, gold, silver, etc.). All amounts in same currency.",
+      "Calculate Zakat using SILVER rate for Nisab (52.5 tolas). Gold is NOT included in the calculation. Pass silver rate per tola so the user sees the breakdown. All amounts in the same currency.",
     parameters: {
       type: "object",
       properties: {
@@ -24,11 +31,11 @@ export const ZAKATGPT_CALCULATE_TOOL = {
         savings: { type: "number", description: "Savings and deposits" },
         investments: { type: "number", description: "Business investments / stock" },
         digitalAssets: { type: "number", description: "Digital assets (crypto, etc.)" },
-        goldValue: { type: "number", description: "Total value of gold (in same currency)" },
-        silverValue: { type: "number", description: "Total value of silver (in same currency)" },
+        silverValue: { type: "number", description: "Total value of silver in same currency (rate × weight)" },
+        otherAssets: { type: "number", description: "Any other zakatable assets (same currency). Gold is excluded." },
         liabilities: { type: "number", description: "Immediate debts / loans to deduct" },
-        nisabThreshold: { type: "number", description: "Nisab threshold in same currency (default 150000)" },
-        currency: { type: "string", description: "Currency code e.g. PKR, USD" },
+        silverRatePerTola: { type: "number", description: "Silver rate per tola in same currency (required for Nisab). Used for breakdown so user can change rate. e.g. 11102 for PKR." },
+        currency: { type: "string", description: "Currency code e.g. PKR, USD, EUR" },
       },
     },
   },

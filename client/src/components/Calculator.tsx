@@ -1,6 +1,12 @@
 import { useState, useMemo, type ReactNode } from "react";
 import { motion } from "framer-motion";
 import { Coins, CircleDollarSign, Landmark, HardDrive, ShieldAlert, Calculator, BarChart3 } from "lucide-react";
+import {
+  TOLA_GRAM,
+  DEFAULT_CURRENCY,
+  DEFAULT_GOLD_RATE_PKR_PER_TOLA,
+  DEFAULT_SILVER_RATE_PKR_PER_TOLA,
+} from "@/config/rates";
 
 type Unit = "grams" | "tolas";
 type CurrencyCode = "PKR" | "USD" | "EUR" | "GBP" | "SAR" | "AED" | "Other";
@@ -22,7 +28,8 @@ function getCurrencySymbol(currency: CurrencyCode, customCode: string): string {
 interface MetalState {
   quantity: string;
   unit: Unit;
-  rate: string;
+  /** Rate in currency per tola (single source of truth); per-gram is derived. */
+  ratePerTola: string;
 }
 
 // --- Stable components defined OUTSIDE the parent so React keeps the same component identity
@@ -87,7 +94,7 @@ function MetalSection({ title, state, setState, theme, currencyLabel, currencySy
 
   return (
     <div
-      className={`p-4 rounded-xl border shadow-sm ${
+      className={`p-4 md:p-5 rounded-xl border shadow-sm min-w-0 ${
         theme === "gold"
           ? "bg-amber-50/60 dark:bg-amber-950/40 border-amber-200 dark:border-amber-800/60"
           : "bg-slate-50/60 dark:bg-slate-900/40 border-slate-200 dark:border-slate-700/60"
@@ -122,8 +129,9 @@ function MetalSection({ title, state, setState, theme, currencyLabel, currencySy
           </button>
         </div>
       </div>
+      {/* Two-row layout: Quantity then two rate columns (equal width) — fixes alignment when "Tolas" and long rate per tola */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div>
+        <div className="min-w-0">
           <label className="block text-xs font-semibold text-foreground/70 mb-1">
             Quantity ({state.unit})
           </label>
@@ -134,7 +142,7 @@ function MetalSection({ title, state, setState, theme, currencyLabel, currencySy
             spellCheck={false}
             autoCorrect="off"
             autoCapitalize="off"
-            className={`w-full px-3 py-2.5 border rounded-lg bg-card focus:outline-none text-sm transition-all ${
+            className={`w-full min-w-0 px-3 py-2.5 border rounded-lg bg-card focus:outline-none text-sm transition-all ${
               quantityFocused ? "border-primary ring-2 ring-primary focus:ring-primary" : "border-border"
             }`}
             placeholder={state.unit === "tolas" ? "e.g. 10" : "e.g. 116"}
@@ -147,28 +155,54 @@ function MetalSection({ title, state, setState, theme, currencyLabel, currencySy
             onBlur={() => setQuantityFocused(false)}
           />
         </div>
-        <div>
-          <label className="block text-xs font-semibold text-foreground/70 mb-1">
-            Rate / {state.unit === "tolas" ? "Tola" : "Gram"} ({currencyLabel})
+        <div className="min-w-0">
+          <label className="block text-xs font-semibold text-foreground/70 mb-1 truncate" title={`Rate per tola (${currencyLabel})`}>
+            Rate per tola ({currencyLabel})
           </label>
           <input
             type="text"
             inputMode="numeric"
             autoComplete="off"
             spellCheck={false}
-            autoCorrect="off"
-            autoCapitalize="off"
-            className={`w-full px-3 py-2.5 border rounded-lg bg-card focus:outline-none text-sm transition-all ${
+            className={`w-full min-w-0 px-3 py-2.5 border rounded-lg bg-card focus:outline-none text-sm transition-all ${
               rateFocused ? "border-primary ring-2 ring-primary focus:ring-primary" : "border-border"
             }`}
             placeholder={currencySymbol ? `e.g. ${currencySymbol}5,000` : "e.g. 5000"}
-            value={state.rate}
+            value={state.ratePerTola}
             onChange={(e) => {
               const numValue = e.target.value.replace(/[^0-9.]/g, "");
-              setState((prev) => ({ ...prev, rate: numValue }));
+              setState((prev) => ({ ...prev, ratePerTola: numValue }));
             }}
             onFocus={() => setRateFocused(true)}
             onBlur={() => setRateFocused(false)}
+          />
+        </div>
+        <div className="min-w-0">
+          <label className="block text-xs font-semibold text-foreground/70 mb-1 truncate" title={`Rate per gram (${currencyLabel})`}>
+            Rate per gram ({currencyLabel})
+          </label>
+          <input
+            type="text"
+            inputMode="numeric"
+            autoComplete="off"
+            spellCheck={false}
+            className="w-full min-w-0 px-3 py-2.5 border rounded-lg bg-card focus:outline-none text-sm transition-all border-border focus:border-primary focus:ring-2 focus:ring-primary"
+            placeholder={currencySymbol ? `e.g. ${currencySymbol}500` : "e.g. 500"}
+            value={
+              (() => {
+                const perTola = parseFloat(state.ratePerTola);
+                return Number.isFinite(perTola) && perTola >= 0 ? (perTola / TOLA_GRAM).toFixed(2) : "";
+              })()
+            }
+            onChange={(e) => {
+              const numValue = e.target.value.replace(/[^0-9.]/g, "");
+              const perGram = parseFloat(numValue);
+              if (numValue === "" || numValue === ".") {
+                setState((prev) => ({ ...prev, ratePerTola: numValue }));
+              } else if (Number.isFinite(perGram) && perGram >= 0) {
+                setState((prev) => ({ ...prev, ratePerTola: (perGram * TOLA_GRAM).toFixed(2) }));
+              }
+            }}
           />
         </div>
       </div>
@@ -182,8 +216,12 @@ function formatAmount(symbol: string, value: number): string {
 }
 
 export function ZakatCalculator() {
-  // Currency (for display only; user enters amounts in their chosen currency)
-  const [currency, setCurrency] = useState<CurrencyCode>("PKR");
+  // Currency (default from env; user can change)
+  const [currency, setCurrency] = useState<CurrencyCode>(
+    (DEFAULT_CURRENCY && ["PKR", "USD", "EUR", "GBP", "SAR", "AED", "Other"].includes(DEFAULT_CURRENCY)
+      ? DEFAULT_CURRENCY
+      : "PKR") as CurrencyCode
+  );
   const [customCurrency, setCustomCurrency] = useState<string>("");
   const currencyLabel = currency === "Other" ? (customCurrency.trim() || "Currency") : currency;
   const currencySymbol = getCurrencySymbol(currency, customCurrency);
@@ -194,9 +232,17 @@ export function ZakatCalculator() {
   const [investments, setInvestments] = useState<string>("");
   const [digitalAssets, setDigitalAssets] = useState<string>("");
 
-  // Precious Metals
-  const [gold, setGold] = useState<MetalState>({ quantity: "", unit: "tolas", rate: "" });
-  const [silver, setSilver] = useState<MetalState>({ quantity: "", unit: "tolas", rate: "" });
+  // Precious Metals (default gold/silver rates from env when PKR)
+  const [gold, setGold] = useState<MetalState>({
+    quantity: "",
+    unit: "tolas",
+    ratePerTola: String(DEFAULT_GOLD_RATE_PKR_PER_TOLA),
+  });
+  const [silver, setSilver] = useState<MetalState>({
+    quantity: "",
+    unit: "tolas",
+    ratePerTola: String(DEFAULT_SILVER_RATE_PKR_PER_TOLA),
+  });
 
   // Deductions
   const [liabilities, setLiabilities] = useState<string>("");
@@ -216,20 +262,25 @@ export function ZakatCalculator() {
     const investmentsVal = parseNum(investments);
     const digitalVal = parseNum(digitalAssets);
 
-    const goldVal = parseNum(gold.quantity) * parseNum(gold.rate);
-    const silverVal = parseNum(silver.quantity) * parseNum(silver.rate);
+    const goldRatePerTola = parseNum(gold.ratePerTola);
+    const goldRatePerGram = goldRatePerTola / TOLA_GRAM;
+    const goldVal =
+      parseNum(gold.quantity) * (gold.unit === "tolas" ? goldRatePerTola : goldRatePerGram);
+
+    const silverRatePerTola = parseNum(silver.ratePerTola);
+    const silverRatePerGram = silverRatePerTola / TOLA_GRAM;
+    const silverVal =
+      parseNum(silver.quantity) * (silver.unit === "tolas" ? silverRatePerTola : silverRatePerGram);
 
     const totalAssets = cashVal + savingsVal + investmentsVal + digitalVal + goldVal + silverVal;
     const liabilitiesVal = parseNum(liabilities);
 
     const netWealth = totalAssets - liabilitiesVal;
 
-    // Nisab logic:
-    // Silver nisab is 52.5 tolas or 612.36 grams.
+    // Nisab: silver 52.5 tolas or 612.36 grams
     let dynamicNisab = 0;
-    const sRate = parseNum(silver.rate);
-    if (sRate > 0) {
-      dynamicNisab = silver.unit === "tolas" ? sRate * 52.5 : sRate * 612.36;
+    if (silverRatePerTola > 0) {
+      dynamicNisab = silver.unit === "tolas" ? silverRatePerTola * 52.5 : silverRatePerGram * 612.36;
     } else {
       dynamicNisab = 150000;
     }
@@ -243,7 +294,7 @@ export function ZakatCalculator() {
       zakatAmount,
       isEligible,
       dynamicNisab,
-      silverRateProvided: sRate > 0,
+      silverRateProvided: silverRatePerTola > 0,
     };
   }, [cash, savings, investments, digitalAssets, gold, silver, liabilities]);
 
@@ -294,10 +345,10 @@ export function ZakatCalculator() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <InputField icon={currencySymbol ? <span className="text-base font-semibold text-primary/80">{currencySymbol}</span> : <CircleDollarSign />} label="Cash in Hand & Bank" value={cash} onChange={setCash} placeholder={currencySymbol ? `${currencySymbol} 0.00` : "0.00"} />
-            <InputField icon={currencySymbol ? <span className="text-base font-semibold text-primary/80">{currencySymbol}</span> : <Landmark />} label="Savings & Deposits" value={savings} onChange={setSavings} placeholder={currencySymbol ? `${currencySymbol} 0.00` : "0.00"} />
-            <InputField icon={currencySymbol ? <span className="text-base font-semibold text-primary/80">{currencySymbol}</span> : <CircleDollarSign />} label="Business Investments / Stock" value={investments} onChange={setInvestments} placeholder={currencySymbol ? `${currencySymbol} 0.00` : "0.00"} />
-            <InputField icon={currencySymbol ? <span className="text-base font-semibold text-primary/80">{currencySymbol}</span> : <HardDrive />} label="Digital Assets (Crypto, etc.)" value={digitalAssets} onChange={setDigitalAssets} placeholder={currencySymbol ? `${currencySymbol} 0.00` : "0.00"} />
+            <InputField icon={currencySymbol ? <span className="text-base font-semibold text-primary/80">{currencySymbol}</span> : <CircleDollarSign />} label="Cash in Hand & Bank" value={cash} onChange={setCash} placeholder="0.00" />
+            <InputField icon={currencySymbol ? <span className="text-base font-semibold text-primary/80">{currencySymbol}</span> : <Landmark />} label="Savings & Deposits" value={savings} onChange={setSavings} placeholder="0.00" />
+            <InputField icon={currencySymbol ? <span className="text-base font-semibold text-primary/80">{currencySymbol}</span> : <CircleDollarSign />} label="Business Investments / Stock" value={investments} onChange={setInvestments} placeholder="0.00" />
+            <InputField icon={currencySymbol ? <span className="text-base font-semibold text-primary/80">{currencySymbol}</span> : <HardDrive />} label="Digital Assets (Crypto, etc.)" value={digitalAssets} onChange={setDigitalAssets} placeholder="0.00" />
           </div>
         </motion.div>
 
@@ -309,10 +360,10 @@ export function ZakatCalculator() {
           className="bg-card rounded-xl p-5 md:p-6 shadow-gold border border-border/50 relative overflow-hidden"
         >
           <div className="absolute top-0 left-0 w-1 h-full bg-primary rounded-l" />
-<h2 className="text-xl font-display font-bold text-foreground dark:text-primary mb-4 flex items-center gap-2">
-          Precious Metals
+          <h2 className="text-xl font-display font-bold text-foreground dark:text-primary mb-4 flex items-center gap-2">
+            Precious Metals
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
             <MetalSection title="Gold (ذهب)" state={gold} setState={setGold} theme="gold" currencyLabel={currencyLabel} currencySymbol={currencySymbol} />
             <MetalSection title="Silver (فضة)" state={silver} setState={setSilver} theme="silver" currencyLabel={currencyLabel} currencySymbol={currencySymbol} />
           </div>
@@ -329,7 +380,7 @@ export function ZakatCalculator() {
           <h2 className="text-xl font-display font-bold text-foreground dark:text-primary mb-4 flex items-center gap-2">
             <ShieldAlert className="text-destructive w-5 h-5" /> Deductible Liabilities
           </h2>
-          <InputField icon={currencySymbol ? <span className="text-base font-semibold text-primary/80">{currencySymbol}</span> : <CircleDollarSign />} label="Outstanding Loans & Debts (Immediate)" value={liabilities} onChange={setLiabilities} placeholder={currencySymbol ? `${currencySymbol} 0.00` : "0.00"} />
+          <InputField icon={currencySymbol ? <span className="text-base font-semibold text-primary/80">{currencySymbol}</span> : <CircleDollarSign />} label="Outstanding Loans & Debts (Immediate)" value={liabilities} onChange={setLiabilities} placeholder="0.00" />
           <p className="mt-2 text-xs text-muted-foreground">
             * Only deduct debts that are due for payment immediately or within the current lunar year.
           </p>
@@ -408,9 +459,9 @@ export function ZakatCalculator() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="bg-card rounded-xl p-6 shadow-gold border-2 border-dashed border-primary/30 flex flex-col items-center justify-center min-h-[280px] text-center"
+            className="bg-card rounded-xl p-6 shadow-gold border-2 border-dashed border-primary/30 flex flex-col items-start min-h-[200px] text-left"
           >
-            <div className="w-14 h-14 rounded-full bg-primary/15 flex items-center justify-center mb-4">
+            <div className="w-14 h-14 rounded-full bg-primary/15 flex items-center justify-center mb-4 shrink-0">
               <BarChart3 className="w-7 h-7 text-primary" />
             </div>
             <h2 className="font-display font-bold text-lg text-foreground dark:text-primary mb-2">Zakat Summary</h2>

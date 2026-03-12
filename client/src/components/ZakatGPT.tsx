@@ -8,7 +8,7 @@ export interface ChatMessage {
 }
 
 const WELCOME =
-  "Assalamu alaikum! I'm ZakatGPT, your AI assistant for Zakat. Ask me anything about rules, Nisab, or share your amounts and I'll calculate for you.";
+  "Assalamu alaikum! I'm your Zakat Assistant. Ask about Zakat rules, Nisab, Hadith—or share your amounts and I'll help you calculate.";
 
 export function ZakatGPT() {
   const [open, setOpen] = useState(false);
@@ -99,7 +99,7 @@ export function ZakatGPT() {
                   <MessageCircle className="w-4 h-4 text-primary" />
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="font-display font-bold text-lg">ZakatGPT</span>
+                  <span className="font-display font-bold text-lg">Zakat Assistant</span>
                   <span className="px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider rounded bg-primary/30 text-primary border border-primary/40">
                     AI
                   </span>
@@ -196,7 +196,7 @@ export function ZakatGPT() {
         type="button"
         onClick={() => setOpen((o) => !o)}
         className="fixed bottom-6 right-6 z-[99] w-14 h-14 rounded-full bg-gradient-gold text-white shadow-lg shadow-primary/40 flex items-center justify-center hover:scale-105 transition-transform"
-        aria-label={open ? "Close ZakatGPT" : "Open ZakatGPT"}
+        aria-label={open ? "Close Zakat Assistant" : "Open Zakat Assistant"}
       >
         <MessageCircle className="w-6 h-6" />
       </motion.button>

@@ -14,7 +14,7 @@ export const contactSubmitSchema = contactFormSchema.extend({
 });
 export type ContactSubmit = z.infer<typeof contactSubmitSchema>;
 
-/** Chat message for ZakatGPT */
+/** Chat message for Zakat Assistant */
 export const chatMessageSchema = z.object({
   role: z.enum(["user", "assistant", "system"]),
   content: z.string(),

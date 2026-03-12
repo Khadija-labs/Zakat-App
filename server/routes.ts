@@ -5,7 +5,7 @@ import OpenAI from "openai";
 import { api } from "@shared/routes";
 import { chatRequestSchema } from "@shared/schema";
 import { calculateZakat } from "./zakatCalc";
-import { ZAKATGPT_SYSTEM_PROMPT, ZAKATGPT_CALCULATE_TOOL } from "./prompts/zakatgpt";
+import { ZAKAT_ASSISTANT_SYSTEM_PROMPT, ZAKATGPT_CALCULATE_TOOL } from "./prompts/zakatgpt";
 import { z } from "zod";
 
 const MAIL_TO = process.env.MAIL_TO || "khadija.amin.dev@gmail.com";
@@ -142,7 +142,7 @@ export async function registerRoutes(
       }
       const openai = new OpenAI({ apiKey: openaiKey });
       const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
-        { role: "system", content: ZAKATGPT_SYSTEM_PROMPT },
+        { role: "system", content: ZAKAT_ASSISTANT_SYSTEM_PROMPT },
         ...body.messages.map((m) => ({ role: m.role, content: m.content })),
       ];
       let response = await openai.chat.completions.create({
@@ -165,9 +165,10 @@ export async function registerRoutes(
             savings: args.savings,
             investments: args.investments,
             digitalAssets: args.digitalAssets,
-            goldValue: args.goldValue,
             silverValue: args.silverValue,
+            otherAssets: args.otherAssets,
             liabilities: args.liabilities,
+            silverRatePerTola: args.silverRatePerTola,
             nisabThreshold: args.nisabThreshold,
             currency: args.currency,
           });
