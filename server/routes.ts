@@ -39,10 +39,25 @@ function getMailer() {
   });
 }
 
+const SITEMAP_XML = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://zakat-calculators.vercel.app/</loc><lastmod>2025-03-12</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://zakat-calculators.vercel.app/calculator</loc><lastmod>2025-03-12</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://zakat-calculators.vercel.app/about</loc><lastmod>2025-03-12</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://zakat-calculators.vercel.app/contact</loc><lastmod>2025-03-12</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://zakat-calculators.vercel.app/terms-and-conditions</loc><lastmod>2025-03-12</lastmod><changefreq>yearly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://zakat-calculators.vercel.app/privacy-policy</loc><lastmod>2025-03-12</lastmod><changefreq>yearly</changefreq><priority>0.5</priority></url>
+</urlset>`;
+
 export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
+  app.get("/sitemap.xml", (_req, res) => {
+    res.type("application/xml");
+    res.send(SITEMAP_XML);
+  });
+
   app.post(api.contact.submit.path, async (req, res) => {
     try {
       const input = api.contact.submit.input.parse(req.body);
