@@ -54,8 +54,9 @@ export async function registerRoutes(
   app: Express
 ): Promise<Server> {
   app.get("/sitemap.xml", (_req, res) => {
-    res.type("application/xml");
-    res.send(SITEMAP_XML);
+    res.setHeader("Content-Type", "application/xml; charset=utf-8");
+    res.setHeader("Cache-Control", "public, max-age=3600");
+    res.status(200).end(SITEMAP_XML);
   });
 
   app.post(api.contact.submit.path, async (req, res) => {
