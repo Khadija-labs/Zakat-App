@@ -49,7 +49,7 @@ export function Layout({ children }: { children: ReactNode }) {
     { href: "/about", label: "About Us" },
     { href: "/contact", label: "Contact Us" },
     { href: "/terms-and-conditions", label: "Terms and Conditions" },
-    { href: "/privacy-policy", label: "Privacy and Policies" },
+    { href: "/privacy-policy", label: "Privacy Policy" },
   ];
 
   return (
@@ -166,7 +166,7 @@ export function Layout({ children }: { children: ReactNode }) {
                 <li><Link href="/about" className="hover:text-primary transition-colors">About Us</Link></li>
                 <li><Link href="/contact" className="hover:text-primary transition-colors">Contact Us</Link></li>
                 <li><Link href="/terms-and-conditions" className="hover:text-primary transition-colors">Terms and Conditions</Link></li>
-                <li><Link href="/privacy-policy" className="hover:text-primary transition-colors">Privacy and Policies</Link></li>
+                <li><Link href="/privacy-policy" className="hover:text-primary transition-colors">Privacy Policy</Link></li>
               </ul>
             </div>
 

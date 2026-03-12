@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-const SITE_URL = import.meta.env.VITE_SITE_URL || "https://zakatcalc.app";
+const SITE_URL = import.meta.env.VITE_SITE_URL || "https://zakat-calculators.vercel.app";
 
 export interface SEOProps {
   title?: string;
@@ -13,11 +13,11 @@ export interface SEOProps {
  * Updates document title and meta tags for SEO. Use once per page near the top.
  */
 export function SEO({ title, description, path = "", noIndex = false }: SEOProps) {
-  const fullTitle = title ? `${title} | ZakatCalc` : "ZakatCalc – Free Zakat Calculator | Purify Your Wealth with Precision";
+  const fullTitle = title ? `${title} | ZakatCalc` : "Free Zakat Calculator Online – ZakatCalc | Gold, Silver, Cash (PKR, USD)";
   const fullUrl = path ? `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}` : SITE_URL;
   const desc =
     description ??
-    "Calculate your Zakat accurately according to Islamic principles. Private, client-side calculator for cash, gold, silver, and more.";
+    "Free online Zakat calculator. Calculate Zakat on gold, silver, cash, savings & more. PKR, USD. Nisab-based, private.";
 
   useEffect(() => {
     document.title = fullTitle;
